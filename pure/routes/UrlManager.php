@@ -19,7 +19,7 @@ class UrlManager
 	/**
 	 * Método construtor
 	 *
-	 * @access privado para proibir novas instances.
+	 * @access privado para proibir novas instances
 	 * @internal função de uso interno
 	 */
 	private function __construct() {}
@@ -28,7 +28,7 @@ class UrlManager
 	private function __wakeup(){}
 
 	/**
-	 * Recupera a única instance disponível do objeto
+	 * Recupera a única instance disponível do objeto.
 	 *
 	 * @see Singleton
 	 * @link https://pt.wikipedia.org/wiki/Singleton
@@ -44,7 +44,8 @@ class UrlManager
 	}
 
 	/**
-	 * Cria uma rota a partir da URL digitada pelo usuário
+	 * Cria uma rota a partir da URL digitada pelo usuário.
+	 *
 	 * @see Pure\Routes\Route
 	 * @return Route rota desejada ou rota padrão
 	 */
@@ -65,7 +66,7 @@ class UrlManager
 	}
 
 	/**
-	 * Retorna rota utilizada como padrão caso o usuário não defina uma.
+	 * Recupera rota utilizada como padrão caso o usuário não defina uma.
 	 *
 	 * @throws RouteException se a rota não estiver configurada em App\Configs\Config::routes
 	 * @return Route rota padrão
@@ -81,7 +82,7 @@ class UrlManager
 	}
 
 	/**
-	 * Retorna rota utilizada caso a rota digitada pelo usuário
+	 * Recupera rota utilizada caso a rota digitada pelo usuário
 	 * não seja válida ou encontrada.
 	 *
 	 * @throws RouteException se a rota não estiver configurada em App\Configs\Config::routes()
@@ -97,5 +98,18 @@ class UrlManager
 		return $routes['DefaultErrorRoute'];
 	}
 
+	/**
+	 * Verifica se a rota enviada por parametro é válida.
+	 *
+	 * @param Route $route a ser verificada
+	 * @return boolean resposta
+	 */
+	public function route_exists(Route $route)
+	{
+		$class = 'app\\controller\\' . $route->get_controller();
+		$filename = 'app/controller/' . $route->get_controller() . '.php';
+		$action = $route->get_action();
+		return (!is_file($filename) || !class_exists($class) || !method_exists($class, $action));
+	}
 
 }

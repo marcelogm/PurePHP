@@ -31,6 +31,7 @@
   <ItemGroup>
     <Folder Include="app\" />
     <Folder Include="app\configs\" />
+    <Folder Include="app\controller\" />
     <Folder Include="pure\" />
     <Folder Include="pure\base\" />
     <Folder Include="pure\kernel\" />
