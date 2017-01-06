@@ -37,7 +37,8 @@ class Engine
 	 * @link https://pt.wikipedia.org/wiki/Singleton
 	 * @return Engine
 	 */
-	public static function get_instance(){
+	public static function get_instance()
+	{
 		if (self::$instance === null)
 		{
 			self::$instance = new Engine();

@@ -34,7 +34,8 @@ class UrlManager
 	 * @link https://pt.wikipedia.org/wiki/Singleton
 	 * @return UrlManager
 	 */
-	public static function get_instance(){
+	public static function get_instance()
+	{
 		if (self::$instance === null)
 		{
 			self::$instance = new UrlManager();
