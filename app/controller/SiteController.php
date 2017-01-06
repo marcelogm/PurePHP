@@ -14,6 +14,6 @@ class SiteController extends Controller
 {
 	public function index_action()
 	{
-		echo 'here.';
+		echo 'Dentro';
 	}
 }

@@ -101,7 +101,9 @@ class Engine
 			throw new ClassException('O método ' . $action . ' não está presente no controller. ');
 		}
 		// TODO: before, action e after action
+		$controller->before();
 		$controller->$action($param);
+		$controller->after();
 		exit();
 	}
 

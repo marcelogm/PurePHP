@@ -15,4 +15,14 @@ namespace Pure\Base;
 abstract class Controller
 {
 	
+	public function before()
+	{
+		echo ' Antes ';
+	}
+
+	public function after()
+	{
+		echo ' Depois ';
+	}
+
 }
