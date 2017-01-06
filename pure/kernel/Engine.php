@@ -17,7 +17,6 @@ use Pure\Routes\UrlManager;
 class Engine
 {
 	private static $instance = null;
-	private $route;
 
 	/**
 	 * Método construtor
@@ -52,7 +51,7 @@ class Engine
 	 */
 	public function execute()
 	{
-		
+		$manager = UrlManager::get_instance();
 	}
 
 	private function load_model()
@@ -70,11 +69,4 @@ class Engine
 		
 	}
 	
-	public function get_requested_route()
-	{
-		return $this->route;
-	}
-	
-	
-
 }

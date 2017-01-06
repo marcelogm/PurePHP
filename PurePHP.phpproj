@@ -8,6 +8,8 @@
     </RootNamespace>
     <OutputType>Library</OutputType>
     <ProjectTypeGuids>{A0786B88-2ADB-4C21-ABE8-AA2D79766269}</ProjectTypeGuids>
+    <SpecificPageValue>pure/base/</SpecificPageValue>
+    <StartAction>SpecificPage</StartAction>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -18,7 +20,10 @@
   <ItemGroup>
     <Compile Include=".htaccess" />
     <Compile Include="index.php" />
+    <Compile Include="pure\base\PException.php" />
+    <Compile Include="pure\exceptions\RouteException.php" />
     <Compile Include="pure\kernel\Engine.php" />
+    <Compile Include="pure\routes\Route.php" />
     <Compile Include="pure\routes\UrlManager.php" />
     <Compile Include="README.md" />
   </ItemGroup>
@@ -27,6 +32,7 @@
     <Folder Include="pure\" />
     <Folder Include="pure\base\" />
     <Folder Include="pure\kernel\" />
+    <Folder Include="pure\exceptions\" />
     <Folder Include="pure\routes\" />
     <Folder Include="pure\util\" />
   </ItemGroup>
