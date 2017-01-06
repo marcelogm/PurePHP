@@ -16,9 +16,13 @@ use Pure\Base\PException;
 class RouteException extends PException
 {
 
-	public function __construct()
+	/**
+	 * Construtor 
+	 * @param string $message relatorio do erro
+	 */
+	public function __construct($message)
 	{
-		parent::__construct('Falha na manipulação de rota. Rota inválida ou não existente.');
+		parent::__construct('Rota inválida ou não existente:' . $message);
 	}
 
 }

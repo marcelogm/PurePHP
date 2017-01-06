@@ -1,4 +1,5 @@
 <?php
+namespace Pure\Routes;
 
 /**
  * Classe representativa de Rota
@@ -18,8 +19,8 @@
  * o usuário não especifique qual rota deseja ('DefaultRoute')
  * ou a rota desejada não exista ('DefaultErorrRoute')
  *
- * @version 1.0
- * @author 00271922
+ * @version 1.1
+ * @author Marcelo Gomes Martins
  */
 class Route
 {
@@ -29,8 +30,9 @@ class Route
 
 	/**
 	 * Construtor da rota
-	 * Transforma as strings enviadas de acordo com os padrões 
+	 * Transforma as strings enviadas de acordo com os padrões
 	 * do framework.
+	 *
 	 * @param string $controller nome da classe de controle
 	 * @param string $action nome da ação
 	 * @param string $param parametros que essa ação receberá
@@ -42,6 +44,45 @@ class Route
 		$this->param = $param;
 	}
 
+	/**
+	 * Recupera a variavel $controller
+	 * @return string nome do controller
+	 */
+	public function get_controller()
+	{
+		return $this->controller;
+	}
 
+	/**
+	 * Recupera a variavel $action
+	 * @return string nome da ação
+	 */
+	public function get_action()
+	{
+		return $this->action;
+	}
+
+	/**
+	 * Recupera a variavel $param
+	 * @return string parametro enviado
+	 */
+	public function get_param()
+	{
+		return $this->param;
+	}
+
+	/**
+	 * Compara a rota atual com a rota enviada por parametro
+	 * São consideradas rotas iguais aquelas que possuem 
+	 * o mesmo controller e a mesma action.
+	 *
+	 * @param Route $route comparada
+	 * @return boolean resultado da comparação
+	 */
+	public function equals(Route $route)
+	{
+		return (strtolower($route->controller) === strtolower($this->controller) && 
+				strtolower($route->action) === strtolower($this->action));
+	}
 
 }

@@ -19,6 +19,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include=".htaccess" />
+    <Compile Include="app\configs\Config.php" />
     <Compile Include="index.php" />
     <Compile Include="pure\base\PException.php" />
     <Compile Include="pure\exceptions\RouteException.php" />
@@ -29,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\" />
+    <Folder Include="app\configs\" />
     <Folder Include="pure\" />
     <Folder Include="pure\base\" />
     <Folder Include="pure\kernel\" />

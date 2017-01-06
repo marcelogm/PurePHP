@@ -10,6 +10,7 @@ use Pure\Routes\UrlManager;
  * básicas de rotas manipulando a classe UrlManager.
  * É caracterizada por ser única no contexto, sendo acessivel
  * utilizando o método estático get_intance.
+ *
  * @see Pure\Routes\UrlManager
  * @version 1.1
  * @author Marcelo Gomes Martins

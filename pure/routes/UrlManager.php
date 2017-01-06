@@ -1,5 +1,7 @@
 <?php
 namespace Pure\Routes;
+use App\Configs\Config;
+use Pure\Exceptions\RouteException;
 
 /**
  * Gerenciador de rotas
@@ -7,8 +9,8 @@ namespace Pure\Routes;
  * Responsavel por gerenciar, criar, modificar e validar
  * dados enviados por meio de uma URL.
  *
- * @version 1.0
- * @author 00271922
+ * @version 1.1
+ * @author Marcelo Gomes Martins
  */
 class UrlManager
 {
@@ -40,25 +42,58 @@ class UrlManager
 		return self::$instance;
 	}
 
+	/**
+	 * Cria uma rota a partir da URL digitada pelo usuário
+	 * @see Pure\Routes\Route
+	 * @return Route rota desejada ou rota padrão
+	 */
 	public function get_route()
 	{
 		if (isset($_GET['PurePage']))
 		{
 			$requested = trim($_GET['PurePage']);
 			$exploded_url = explode('/', $requested);
-
+			$route = new Route(
+				(isset($exploded_url[0])) ? $exploded_url[0] : null,
+				(isset($exploded_url[1])) ? $exploded_url[1] : null,
+				(isset($exploded_url[2])) ? $exploded_url[2] : null
+			);
+			return $route;
 		}
-
+		return $this->get_default_route();
 	}
 
+	/**
+	 * Retorna rota utilizada como padrão caso o usuário não defina uma.
+	 *
+	 * @throws RouteException se a rota não estiver configurada em App\Configs\Config::routes
+	 * @return Route rota padrão
+	 */
 	public function get_default_route()
 	{
-
+		$routes = Config::routes();
+		if (!isset($routes['DefaultRoute']))
+		{
+			throw new RouteException('Rota padrão não configurada em App\Configs\Config::routes.');
+		}
+		return $routes['DefaultRoute'];
 	}
 
+	/**
+	 * Retorna rota utilizada caso a rota digitada pelo usuário
+	 * não seja válida ou encontrada.
+	 *
+	 * @throws RouteException se a rota não estiver configurada em App\Configs\Config::routes()
+	 * @return Route rota padrão para erros
+	 */
 	public function get_error_route()
 	{
-
+		$routes = Config::routes();
+		if (!isset($routes['DefaultErrorRoute']))
+		{
+			throw new RouteException('Rota padrão para erros não configurada em App\Configs\Config::routes.');
+		}
+		return $routes['DefaultErrorRoute'];
 	}
 
 
