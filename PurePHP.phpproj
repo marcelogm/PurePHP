@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -15,89 +16,16 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="app\configs\Config.php" />
-    <Compile Include="app\controller\DashboardController.php" />
-    <Compile Include="app\controller\ErrorController.php" />
-    <Compile Include="app\controller\SiteController.php" />
-    <Compile Include="app\images\demo1.jpg" />
-    <Compile Include="app\images\demo2.jpg" />
-    <Compile Include="app\images\demo3.jpg" />
-    <Compile Include="app\model\entities\Balance.php" />
-    <Compile Include="app\model\entities\Password.php" />
-    <Compile Include="app\model\entities\Person.php" />
-    <Compile Include="app\model\repository\BalanceRepository.php" />
-    <Compile Include="app\model\repository\PasswordRepository.php" />
-    <Compile Include="app\model\repository\PeopleRepository.php" />
-    <Compile Include="app\model\Facade.php" />
-    <Compile Include="app\util\DynamicHtml.php" />
-    <Compile Include="app\util\Helpers.php" />
-    <Compile Include="app\util\ParamsManager.php" />
-    <Compile Include="app\util\PasswordManager.php" />
-    <Compile Include="app\util\SessionManager.php" />
-    <Compile Include="app\view\components\day.php" />
-    <Compile Include="app\view\components\footer.php" />
-    <Compile Include="app\view\components\head.php" />
-    <Compile Include="app\view\components\header.php" />
-    <Compile Include="app\view\components\insert.php" />
-    <Compile Include="app\view\components\month.php" />
-    <Compile Include="app\view\components\period.php" />
-    <Compile Include="app\view\pages\about.php" />
-    <Compile Include="app\view\pages\dashboard.php" />
-    <Compile Include="app\view\pages\error.php" />
-    <Compile Include="app\view\pages\index.php" />
-    <Compile Include="app\view\pages\login.php" />
-    <Compile Include="app\view\pages\registration.php" />
-    <Compile Include="app\view\stylesheets\css\bootstrap-datetimepicker.css" />
-    <Compile Include="app\view\stylesheets\css\bootstrap-theme.css" />
-    <Compile Include="app\view\stylesheets\css\bootstrap-theme.css.map" />
-    <Compile Include="app\view\stylesheets\css\bootstrap-theme.min.css" />
-    <Compile Include="app\view\stylesheets\css\bootstrap-theme.min.css.map" />
-    <Compile Include="app\view\stylesheets\css\bootstrap.css" />
-    <Compile Include="app\view\stylesheets\css\bootstrap.css.map" />
-    <Compile Include="app\view\stylesheets\css\bootstrap.min.css" />
-    <Compile Include="app\view\stylesheets\css\bootstrap.min.css.map" />
-    <Compile Include="app\view\stylesheets\css\custom.css" />
-    <Compile Include="app\view\stylesheets\fonts\glyphicons-halflings-regular.eot" />
-    <Compile Include="app\view\stylesheets\fonts\glyphicons-halflings-regular.svg" />
-    <Compile Include="app\view\stylesheets\fonts\glyphicons-halflings-regular.ttf" />
-    <Compile Include="app\view\stylesheets\fonts\glyphicons-halflings-regular.woff" />
-    <Compile Include="app\view\stylesheets\fonts\glyphicons-halflings-regular.woff2" />
-    <Compile Include="app\view\stylesheets\js\bootstrap-datetimepicker.min.js" />
-    <Compile Include="app\view\stylesheets\js\bootstrap.js" />
-    <Compile Include="app\view\stylesheets\js\bootstrap.min.js" />
-    <Compile Include="app\view\stylesheets\js\custom.js" />
-    <Compile Include="app\view\stylesheets\js\npm.js" />
-    <Compile Include="pure\base\BaseController.php" />
-    <Compile Include="pure\base\BaseException.php" />
-    <Compile Include="pure\base\BaseModel.php" />
-    <Compile Include="pure\base\BaseRepository.php" />
-    <Compile Include="pure\kernel\Autoloader.php" />
-    <Compile Include="pure\kernel\Engine.php" />
-    <Compile Include="pure\routes\Route.php" />
-    <Compile Include="pure\routes\UrlManager.php" />
     <Compile Include=".htaccess" />
     <Compile Include="index.php" />
     <Compile Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="app\configs" />
-    <Folder Include="app\controller" />
-    <Folder Include="app\images" />
-    <Folder Include="app\model\entities" />
-    <Folder Include="app\model\repository" />
-    <Folder Include="app\model" />
-    <Folder Include="app\util" />
-    <Folder Include="app\view\components" />
-    <Folder Include="app\view\pages" />
-    <Folder Include="app\view\stylesheets\css" />
-    <Folder Include="app\view\stylesheets\fonts" />
-    <Folder Include="app\view\stylesheets\js" />
-    <Folder Include="app\view\stylesheets" />
-    <Folder Include="app\view" />
-    <Folder Include="app" />
-    <Folder Include="pure\base" />
-    <Folder Include="pure\kernel" />
-    <Folder Include="pure\routes" />
-    <Folder Include="pure" />
+    <Folder Include="app\" />
+    <Folder Include="pure\" />
+    <Folder Include="pure\base\" />
+    <Folder Include="pure\kernel\" />
+    <Folder Include="pure\routes\" />
+    <Folder Include="pure\util\" />
   </ItemGroup>
 </Project>
