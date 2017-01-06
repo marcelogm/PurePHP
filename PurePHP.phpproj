@@ -18,6 +18,8 @@
   <ItemGroup>
     <Compile Include=".htaccess" />
     <Compile Include="index.php" />
+    <Compile Include="pure\kernel\Engine.php" />
+    <Compile Include="pure\routes\UrlManager.php" />
     <Compile Include="README.md" />
   </ItemGroup>
   <ItemGroup>
