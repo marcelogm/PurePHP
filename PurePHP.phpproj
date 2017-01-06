@@ -20,9 +20,14 @@
   <ItemGroup>
     <Compile Include=".htaccess" />
     <Compile Include="app\configs\Config.php" />
+    <Compile Include="app\controller\ErrorController.php" />
+    <Compile Include="app\controller\SiteController.php" />
     <Compile Include="index.php" />
-    <Compile Include="pure\base\PException.php" />
+    <Compile Include="pure\base\Controller.php" />
+    <Compile Include="pure\base\Exception.php" />
+    <Compile Include="pure\exceptions\ClassException.php" />
     <Compile Include="pure\exceptions\RouteException.php" />
+    <Compile Include="pure\kernel\autoloader.php" />
     <Compile Include="pure\kernel\Engine.php" />
     <Compile Include="pure\routes\Route.php" />
     <Compile Include="pure\routes\UrlManager.php" />

@@ -1,6 +1,6 @@
 <?php
 namespace Pure\Exceptions;
-use Pure\Base\PException;
+use Pure\Base\Exception;
 
 /**
  * Exception de Rota
@@ -13,7 +13,7 @@ use Pure\Base\PException;
  * @version 1.0
  * @author Marcelo Gomes Martins
  */
-class RouteException extends PException
+class RouteException extends Exception
 {
 
 	/**
@@ -22,7 +22,7 @@ class RouteException extends PException
 	 */
 	public function __construct($message)
 	{
-		parent::__construct('Rota inválida ou não existente:' . $message);
+		parent::__construct('Rota inválida ou não existente: ' . $message);
 	}
 
 }

@@ -1,6 +1,9 @@
 <?php
 namespace Pure\Kernel;
+use Pure\Routes\Route;
 use Pure\Routes\UrlManager;
+use Pure\Base\Controller;
+use Pure\Exceptions\ClassException;
 
 /**
  * Motor de carregamento de páginas do Framework
@@ -48,27 +51,58 @@ class Engine
 
 	/**
 	 * Inicia a aplicação recuperando a URL requisitada,
-	 * gerando uma rota válida com ela e encaminhando para 
+	 * gerando uma rota válida com ela e encaminhando para
 	 * a construção do controller.
 	 */
 	public function execute()
 	{
 		$manager = UrlManager::get_instance();
+		$route = $manager->get_route();
+		var_dump($route);
+		if (!$manager->route_exists($route))
+		{
+			$route = $manager->get_error_route();
+		}
+		$controller = $this->load_controller($route);
+		$this->load_action($controller, $route);
 	}
 
-	private function load_model()
+	/**
+	 * Gera uma instance, se possivel, do controller desejado pela rota.
+	 *
+	 * @param Route $route rota que irá originar o controller
+	 * @throws ClassException se não for possivel achar a classe desejada.
+	 * @return Controller instance de controller
+	 */
+	private function load_controller(Route $route)
 	{
-
+		$class = 'app\\controller\\' . $route->get_controller();
+		if (!class_exists($class))
+		{
+			throw new ClassException('O controller ' . $class . ' não existe.');
+		}
+		return new $class();
 	}
 
-	private function load_controller()
+	/**
+	 * Acessa metodo action, se possivel, desejado pela rota no controller
+	 *
+	 * @param Controller $controller instace de um controller
+	 * @param Route $route rota que irá originar o método action
+	 * @throws ClassException se não for possivel achar o método desejado
+	 */
+	private function load_action(Controller $controller, Route $route)
 	{
-		
+		$action = $route->get_action();
+		$param = $route->get_param();
+
+		if (!method_exists($controller, $action))
+		{
+			throw new ClassException('O método ' . $action . ' não está presente no controller. ');
+		}
+		// TODO: before, action e after action
+		$controller->$action($param);
+		exit();
 	}
 
-	private function load_action()
-	{
-		
-	}
-	
 }

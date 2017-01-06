@@ -45,6 +45,7 @@ class UrlManager
 
 	/**
 	 * Cria uma rota a partir da URL digitada pelo usuário.
+	 * Com o arquivo .htacess, as rotas são enviadas para a variavel $_GET['PurePage']
 	 *
 	 * @see Pure\Routes\Route
 	 * @return Route rota desejada ou rota padrão
@@ -56,9 +57,9 @@ class UrlManager
 			$requested = trim($_GET['PurePage']);
 			$exploded_url = explode('/', $requested);
 			$route = new Route(
-				(isset($exploded_url[0])) ? $exploded_url[0] : null,
-				(isset($exploded_url[1])) ? $exploded_url[1] : null,
-				(isset($exploded_url[2])) ? $exploded_url[2] : null
+				(isset($exploded_url[0])) ? $exploded_url[0] : '',
+				(isset($exploded_url[1])) ? $exploded_url[1] : '',
+				(isset($exploded_url[2])) ? $exploded_url[2] : ''
 			);
 			return $route;
 		}
@@ -109,7 +110,7 @@ class UrlManager
 		$class = 'app\\controller\\' . $route->get_controller();
 		$filename = 'app/controller/' . $route->get_controller() . '.php';
 		$action = $route->get_action();
-		return (!is_file($filename) || !class_exists($class) || !method_exists($class, $action));
+		return (is_file($filename) && class_exists($class) && method_exists($class, $action));
 	}
 
 }
