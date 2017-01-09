@@ -1,5 +1,5 @@
 <?php
-namespace Pure\Database;
+namespace Pure\Base;
 use Pure\Db\Query;
 
 /**
@@ -18,26 +18,36 @@ abstract class Model
 
 	private $table_name;
 
+	/**
+	 * Método construtor
+	 *
+	 * Responsável por definir o nome da tabela $this->table_name.
+	 */
 	public function __construct()
 	{
 		$this->table_name =	strtolower(get_called_class);
 	}
 
-	public static function select(array $columns)
+	/**
+	 * Realiza a construção de uma query do tipo SELECT
+	 *
+	 * @see Pure\Query
+	 * @param array $columns filtro  sobre colunas espeficas da tabela
+	 * @return Query retorna a si mesmo para possibilitar chain method
+	 */
+	public static function select(array $columns = [])
 	{
 		$query = new Query();
 		$query->builder('SELECT ');
 		if(empty($columns))
 		{
-			$query->builder(' * ');
+			$query->builder('*');
 		} else
 		{
-			foreach($columns as $column)
-			{
-				$query->builder($column);
-			}
+
+			$query->builder('`images`.`' . implode('`,`images`.`', $columns) . '`');
 		}
-		$query->builder(' FROM ' . self::table_name);
+		$query->builder(' FROM `' . 'images' . '`');
 		return $query;
 	}
 

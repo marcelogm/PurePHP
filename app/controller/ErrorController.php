@@ -12,12 +12,9 @@ use Pure\Base\Controller;
  */
 class ErrorController extends Controller
 {
+
 	public function index_action(){
 		echo 'Ops, essa página não existe.';
-	}
-
-	public function before()
-	{
 	}
 
 }

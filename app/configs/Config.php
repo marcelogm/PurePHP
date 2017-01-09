@@ -43,11 +43,11 @@ class Config
 	public static function database()
 	{
 		return [
-			'address' => 'xxxxxxxxxxxxxxxxxxxx',
-			'port' => 'xxx',
-			'dbname' => 'xxxxxxxxxxxx',
-			'username' => 'xxxxxxxxxxxx',
-			'password' => 'xxxxxxxxxxxx'
+			'address' => 'localhost',
+			'port' => '3306',
+			'dbname' => 'prntsc',
+			'username' => 'root',
+			'password' => ''
 		];
 	}
 

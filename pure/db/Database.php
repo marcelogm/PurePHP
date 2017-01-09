@@ -25,7 +25,7 @@ class Database
 	 * bem como inicia conexão com o PDO.
 	 *
 	 * @access privado para proibir novas instances.
-	 * @internal função de uso interno
+	 * @internal método de uso interno
 	 */
 	private function __construct()
 	{
@@ -70,11 +70,11 @@ class Database
 
 	/**
 	 * Valida configurações da classe Config::database(),
-	 * verificando se o objeto é um array e tem todos os itens 
+	 * verificando se o objeto é um array e tem todos os itens
 	 * necessarios para configurar o banco de dados.
 	 *
-	 * @param Config $config 
-	 * @return boolean resposta 
+	 * @param string[] $config
+	 * @return boolean resposta
 	 */
 	private function config_validation($config)
 	{
@@ -85,4 +85,34 @@ class Database
 				array_key_exists('username', $config) &&
 				array_key_exists('password', $config));
 	}
+
+	/**
+	 * Executa query no banco de dados
+	 *
+	 * @param Query $query a ser executada
+	 * @throws DatabaseException caso não seja uma query valida
+	 * @return array dados do banco
+	 */
+	public function execute_query($query)
+	{
+		$list = [];
+		try {
+			$statement = $this->connection->prepare($query->generate());
+			var_dump($query->generate());
+			$statement->execute();
+			while($object = $statement->fetchObject())
+			{
+				array_push($list, $object);
+			}
+			return $list;
+		} catch(\Exception $e)
+		{
+			throw new DatabaseException('Falha ao executar query: ' .
+				$query->generate() .
+				' Mais informações: ' .
+				$e->getMessage()
+			);
+		}
+	}
+
 }

@@ -22,7 +22,7 @@
     <Compile Include="app\configs\Config.php" />
     <Compile Include="app\controller\ErrorController.php" />
     <Compile Include="app\controller\SiteController.php" />
-    <Compile Include="app\model\Person.php" />
+    <Compile Include="app\model\Images.php" />
     <Compile Include="index.php" />
     <Compile Include="pure\base\Controller.php" />
     <Compile Include="pure\base\Exception.php" />

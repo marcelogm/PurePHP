@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 use Pure\Base\Controller;
+use App\Model\Images;
 
 /**
  * SiteController short summary.
@@ -12,14 +13,16 @@ use Pure\Base\Controller;
  */
 class SiteController extends Controller
 {
+
 	public function index_action()
 	{
-		echo 'Dentro';
-	}
-
-	public function about_action()
-	{
-		echo 'Estou no about.<br>';
-	}
+		$list = Images::select()
+			->like(['image_url' => '%imgur%'])
+			->order_by(['image_url' => 'ASC'])
+			->limit(16)
+			->offset(5)
+			->execute();
+		var_dump($list);
+	}	
 
 }
