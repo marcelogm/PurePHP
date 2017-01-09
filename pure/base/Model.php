@@ -3,11 +3,11 @@ namespace Pure\Base;
 use Pure\Db\Query;
 
 /**
- * Classe báisca para Models
+ * Classe básica para Models
  *
  * Deve servir como base para outros models, é
  * dotado de capacidade de acesso e funções básicas da
- * tabela ao qual representa
+ * tabela a qual representa
  *
  * @abstract
  * @version 1.0
@@ -29,11 +29,12 @@ abstract class Model
 	}
 
 	/**
-	 * Realiza a construção de uma query do tipo SELECT
+	 * Realiza a construção de um Query Builder para seleção de dados
+	 * retornando um objeto que utiliza o comando SELECT em SQL.
 	 *
 	 * @see Pure\Query
-	 * @param array $columns filtro  sobre colunas espeficas da tabela
-	 * @return Query retorna a si mesmo para possibilitar chain method
+	 * @param array $columns filtro sobre colunas especificas da tabela
+	 * @return Query objeto do Query Builder
 	 */
 	public static function select(array $columns = [])
 	{
@@ -51,27 +52,43 @@ abstract class Model
 		return $query;
 	}
 
+	/**
+	 * @todo
+	 * @param mixed $entities
+	 */
 	public static function update($entities)
 	{
 
 	}
 
+	/**
+	 * @todo
+	 * @param mixed $entities
+	 */
 	public static function delete($entities)
 	{
 
 	}
 
+	/**
+	 * @todo
+	 * @param mixed $entities
+	 */
 	public static function insert($entities)
 	{
-		if(is_array($entities))
-		{
 
-		} else {
-
-		}
 	}
 
-	public static function query_builder($string = '')
+	/**
+	 * Função de criação personalizada
+	 *
+	 * Utiliza-se nos casos onde o Query Builder não é capaz de gerar
+	 * queries, pode-se inserir uma String SQL diretamente no sistema.
+	 *
+	 * @param string $sql String SQL completa
+	 * @return Query objeto do Query Builder
+	 */
+	public static function build($string = '')
 	{
 		$query = new Query;
 		return $query->builder($string);

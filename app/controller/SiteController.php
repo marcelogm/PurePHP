@@ -9,20 +9,16 @@ use App\Model\Images;
  * SiteController description.
  *
  * @version 1.0
- * @author 00271922
+ * @author Marcelo Gomes Martins
  */
 class SiteController extends Controller
 {
 
 	public function index_action()
 	{
-		$list = Images::select()
-			->like(['image_url' => '%imgur%'])
-			->order_by(['image_url' => 'ASC'])
-			->limit(16)
-			->offset(5)
-			->execute();
+		$query = Images::build('SELECT * FROM `images`');
+		$query->where([''])->execute();
 		var_dump($list);
-	}	
+	}
 
 }

@@ -7,6 +7,7 @@ namespace Pure\Util;
  * Responsável pelas funções básicas de segurança do framework
  * Validação de formulários e técnicas contra invações, injections e spoofings
  *
+ * @todo
  * @version 1.0
  * @author Marcelo Gomes Martins
  */

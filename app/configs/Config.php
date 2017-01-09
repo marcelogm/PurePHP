@@ -14,8 +14,14 @@ use Pure\Routes\Route;
 class Config
 {
 	/**
-	 * Summary of routes
-	 * @return Route[]
+	 * Retorna um array de rotas padrões utilizadas pelo sistema de rotas do framework
+	 *
+	 * O item 'DefaultRoute' representa a rota que será carregada caso o usuário 
+	 * não especifique uma. Da mesma forma, 'DefaultErrorRoute' será carregada
+	 * caso haja algum erro ou a rota não exista.
+	 * 
+	 *
+	 * @return Route[] rotas padrões do Framework
 	 */
 	public static function routes()
 	{
