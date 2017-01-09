@@ -1,18 +1,18 @@
 <?php
-namespace Pure\Db;
 
 /**
- * Banco de Dados
+ * Classe de segurança
  *
- * Classe representativa do banco de dados.
- * Gera conexão e estabelece funcionalidades básicas do banco de dado.
+ * Responsável pelas funções básicas de segurança do framework
+ * Validação de formulários e técnicas contra invações, injections e spoofings
  *
- * @internal
  * @version 1.0
  * @author Marcelo Gomes Martins
  */
-class Database
+class SecurityManager
 {
+	private static $instance = null;
+
 	/**
 	 * Método construtor
 	 *
@@ -29,15 +29,14 @@ class Database
 	 *
 	 * @see Singleton
 	 * @link https://pt.wikipedia.org/wiki/Singleton
-	 * @return Database
+	 * @return SecurityManager
 	 */
 	public static function get_instance()
 	{
 		if (self::$instance === null)
 		{
-			self::$instance = new Database();
+			self::$instance = new SecurityManager();
 		}
 		return self::$instance;
 	}
-
 }

@@ -16,4 +16,10 @@ class SiteController extends Controller
 	{
 		echo 'Dentro';
 	}
+
+	public function about_action()
+	{
+		echo 'Estou no about.<br>';
+	}
+
 }

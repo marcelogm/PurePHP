@@ -21,7 +21,7 @@ use Pure\Exceptions\ClassException;
 class Engine
 {
 	private static $instance = null;
-
+	
 	/**
 	 * Método construtor
 	 *
@@ -58,7 +58,6 @@ class Engine
 	{
 		$manager = UrlManager::get_instance();
 		$route = $manager->get_route();
-		var_dump($route);
 		if (!$manager->route_exists($route))
 		{
 			$route = $manager->get_error_route();

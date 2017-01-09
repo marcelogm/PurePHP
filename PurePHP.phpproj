@@ -33,6 +33,7 @@
     <Compile Include="pure\exceptions\RouteException.php" />
     <Compile Include="pure\kernel\autoloader.php" />
     <Compile Include="pure\kernel\Engine.php" />
+    <Compile Include="pure\kernel\SecurityManager.php" />
     <Compile Include="pure\routes\Route.php" />
     <Compile Include="pure\routes\UrlManager.php" />
     <Compile Include="README.md" />
