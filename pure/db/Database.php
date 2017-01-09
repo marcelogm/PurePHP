@@ -1,5 +1,8 @@
 <?php
 namespace Pure\Db;
+use App\Configs\Config;
+use Pure\Exceptions\DatabaseException;
+use PDO;
 
 /**
  * Banco de Dados
@@ -13,13 +16,38 @@ namespace Pure\Db;
  */
 class Database
 {
+    private static $instance = null;
+	private $connection;
+
 	/**
 	 * Método construtor
+	 * Executa a validação de campos de configurações,
+	 * bem como inicia conexão com o PDO.
 	 *
 	 * @access privado para proibir novas instances.
 	 * @internal função de uso interno
 	 */
-	private function __construct() {}
+	private function __construct()
+	{
+		$config = Config::database();
+		if(!$this->config_validation($config))
+		{
+			throw new DatabaseException('Parametros da função Config::database() são inválidos.');
+		}
+		try {
+			$this->connection = new PDO(
+				'mysql:host=' . $config['address'] .
+				';port=' . $config['port'] .
+				';dbname=' . $config['dbname'] ,
+				$config['username'],
+				$config['password']
+			);
+			$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		} catch (PDOException $e)
+		{
+			throw new DatabaseException('Não foi possível iniciar conexão com o banco de dados: ' . $e->getMessage());
+		}
+	}
 
 	private function __clone(){}
 	private function __wakeup(){}
@@ -40,4 +68,21 @@ class Database
 		return self::$instance;
 	}
 
+	/**
+	 * Valida configurações da classe Config::database(),
+	 * verificando se o objeto é um array e tem todos os itens 
+	 * necessarios para configurar o banco de dados.
+	 *
+	 * @param Config $config 
+	 * @return boolean resposta 
+	 */
+	private function config_validation($config)
+	{
+		return (is_array($config) &&
+				array_key_exists('address', $config) &&
+				array_key_exists('port', $config) &&
+				array_key_exists('dbname', $config) &&
+				array_key_exists('username', $config) &&
+				array_key_exists('password', $config));
+	}
 }

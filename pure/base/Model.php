@@ -20,7 +20,7 @@ abstract class Model
 
 	public function __construct()
 	{
-		$this->table_name = get_called_class;
+		$this->table_name =	strtolower(get_called_class);
 	}
 
 	public static function select(array $columns)

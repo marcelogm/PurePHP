@@ -1,4 +1,5 @@
 <?php
+namespace Pure\Util;
 
 /**
  * Classe de segurança

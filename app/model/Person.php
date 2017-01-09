@@ -12,5 +12,5 @@ use Pure\Base\Model;
  */
 class Person extends Model
 {
-
+	public function 
 }

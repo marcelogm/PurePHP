@@ -30,10 +30,11 @@
     <Compile Include="pure\db\Database.php" />
     <Compile Include="pure\db\Query.php" />
     <Compile Include="pure\exceptions\ClassException.php" />
+    <Compile Include="pure\exceptions\DatabaseException.php" />
     <Compile Include="pure\exceptions\RouteException.php" />
     <Compile Include="pure\kernel\autoloader.php" />
     <Compile Include="pure\kernel\Engine.php" />
-    <Compile Include="pure\kernel\SecurityManager.php" />
+    <Compile Include="pure\util\SecurityManager.php" />
     <Compile Include="pure\routes\Route.php" />
     <Compile Include="pure\routes\UrlManager.php" />
     <Compile Include="README.md" />
