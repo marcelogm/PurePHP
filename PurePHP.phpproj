@@ -22,9 +22,13 @@
     <Compile Include="app\configs\Config.php" />
     <Compile Include="app\controller\ErrorController.php" />
     <Compile Include="app\controller\SiteController.php" />
+    <Compile Include="app\model\Person.php" />
     <Compile Include="index.php" />
     <Compile Include="pure\base\Controller.php" />
     <Compile Include="pure\base\Exception.php" />
+    <Compile Include="pure\base\Model.php" />
+    <Compile Include="pure\db\Database.php" />
+    <Compile Include="pure\db\Query.php" />
     <Compile Include="pure\exceptions\ClassException.php" />
     <Compile Include="pure\exceptions\RouteException.php" />
     <Compile Include="pure\kernel\autoloader.php" />
@@ -37,10 +41,13 @@
     <Folder Include="app\" />
     <Folder Include="app\configs\" />
     <Folder Include="app\controller\" />
+    <Folder Include="app\model\" />
+    <Folder Include="app\view\" />
     <Folder Include="pure\" />
     <Folder Include="pure\base\" />
     <Folder Include="pure\kernel\" />
     <Folder Include="pure\exceptions\" />
+    <Folder Include="pure\db\" />
     <Folder Include="pure\routes\" />
     <Folder Include="pure\util\" />
   </ItemGroup>

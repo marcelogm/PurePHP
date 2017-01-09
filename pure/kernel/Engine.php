@@ -52,7 +52,7 @@ class Engine
 	/**
 	 * Inicia a aplicação recuperando a URL requisitada,
 	 * gerando uma rota válida com ela e encaminhando para
-	 * a construção do controller.
+	 * a construção do controller
 	 */
 	public function execute()
 	{
@@ -100,7 +100,6 @@ class Engine
 		{
 			throw new ClassException('O método ' . $action . ' não está presente no controller. ');
 		}
-		// TODO: before, action e after action
 		$controller->before();
 		$controller->$action($param);
 		$controller->after();

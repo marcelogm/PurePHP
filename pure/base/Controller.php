@@ -14,6 +14,13 @@ namespace Pure\Base;
  */
 abstract class Controller
 {
+
+	private $session;
+	private $params;
+
+	public function __construct(){
+		
+	}
 	
 	public function before()
 	{
