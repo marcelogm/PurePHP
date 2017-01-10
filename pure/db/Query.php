@@ -44,9 +44,9 @@ class Query
 	 */
 	public function where(array $filters = [])
 	{
-		if(!empty($filters))
+		if (!empty($filters))
 		{
-			$this->query_string .= ' WHERE ' . implode(' && ', array_map(
+			$this->query_string .= ' WHERE ' . implode(' AND ', array_map(
 				function ($v, $k) {
 					return '`' . $k . '` = \'' . $v . '\'';
 				},
@@ -69,9 +69,9 @@ class Query
 	 */
 	public function like(array $filters = [])
 	{
-		if(!empty($filters))
+		if (!empty($filters))
 		{
-			$this->query_string .= ' WHERE ' . implode(' && ', array_map(
+			$this->query_string .= ' WHERE ' . implode(' AND ', array_map(
 				function ($v, $k) {
 					return '`' . $k . '` LIKE \'' . $v . '\'';
 				},
@@ -93,9 +93,9 @@ class Query
 	 */
 	public function order_by(array $filters = [])
 	{
-		if(!empty($filters))
+		if (!empty($filters))
 		{
-			$this->query_string .= ' ORDER BY ' . implode(' && ', array_map(
+			$this->query_string .= ' ORDER BY ' . implode(', ', array_map(
 				function ($v, $k) {
 					return $k . ' ' . $v;
 				},
@@ -103,6 +103,79 @@ class Query
 				array_keys($filters)
 			));
 		}
+		return $this;
+	}
+
+	/**
+	 * Realiza o agrupamentos dos dados da consulta,
+	 * agrupando de acordo com o valor escolhido.
+	 *
+	 * Adiciona GROUP BY na consulta SQL para cada coluna
+	 *
+	 * @param array $columns filtros para agrupamento de valores
+	 * @return Query objeto do Query Builder
+	 */
+	public function group_by(array $columns = [])
+	{
+		if (!empty($columns))
+		{
+			$this->query_string .= ' GROUP BY ' . implode(', ', $columns);
+		}
+		return $this;
+	}
+
+	/**
+	 * Adiciona mais uma tabela a Query atual por meio de JOIN
+	 *
+	 * Utiliza-se o método "on(['column' => 'column'])" para definir
+	 * variaveis que serão comparadas para a junção.
+	 *
+	 * @see on
+	 * @param string $table_name Nome da tabela que será adicionada a Query
+	 * @param string $type Tipo de JOIN (LEFT, RIGHT, OUTER, FULL)
+	 * @return Query objeto do Query Builder
+	 */
+	public function join($table_name, $type = '')
+	{
+		$this->query_string .= $type . ' JOIN ' . $table_name;
+		return $this;
+	}
+
+	/**
+	 * Faz a relação entre as tabelas adicionadas por meio de JOIN à Query
+	 *
+	 * Adiciona ON na consulta SQL
+	 *
+	 * @param array $filters Nome dos campos que serão comparados ['column' => 'column']
+	 * @return Query objeto do Query Builder
+	 */
+	public function on($filters)
+	{
+		if (!empty($filters))
+		{
+			$this->query_string .= ' ON ' . implode(' AND ', array_map(
+				function ($v, $k) {
+					return $k . ' = ' . $v;
+				},
+				$filters,
+				array_keys($filters)
+			));
+		}
+		return $this;
+	}
+
+	/**
+	 * Cria um alias para o item anterior da Query SQL
+	 *
+	 * Adiciona AS na consulta SQL para cada o item anterior
+	 *
+	 * @deprecated
+	 * @param string $alias_name Alias para a ultima tabela construída
+	 * @return Query objeto do Query Builder
+	 */
+	public function alias($alias_name)
+	{
+		$this->query_string .= ' AS ' . $alias_name;
 		return $this;
 	}
 
@@ -129,8 +202,8 @@ class Query
 	 *
 	 * Adiciona OFFSET na consulta SQL
 	 *
-	 * @param mixed $offset 
-	 * @return Query
+	 * @param string $offset
+	 * @return Query objeto do Query Builder
 	 */
 	public function offset($offset)
 	{
@@ -155,7 +228,7 @@ class Query
 
 	/**
 	 * Retorna a String de consulta gerada pelo Query Builder
-	 * 
+	 *
 	 * @return string String SQL
 	 */
 	public function generate()

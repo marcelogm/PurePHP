@@ -16,9 +16,8 @@ class SiteController extends Controller
 
 	public function index_action()
 	{
-		$query = Images::build('SELECT * FROM `images`');
-		$query->where([''])->execute();
-		var_dump($list);
+		$image = Images::find(1234);
+		var_dump($image);
 	}
 
 }
