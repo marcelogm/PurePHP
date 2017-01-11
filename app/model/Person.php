@@ -3,14 +3,13 @@ namespace App\Model;
 use Pure\Base\Model;
 
 /**
- * Images short summary.
+ * Person short summary.
  *
- * Images description.
+ * Person description.
  *
  * @version 1.0
  * @author 00271922
  */
-class Images extends Model
+class Person extends Model
 {
-	
 }

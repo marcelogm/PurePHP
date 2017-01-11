@@ -1,6 +1,8 @@
 <?php
 namespace Pure\Base;
 use Pure\Db\Query;
+use Pure\Db\Database;
+use App\Configs\Config;
 
 /**
  * Classe básica para Models
@@ -15,8 +17,98 @@ use Pure\Db\Query;
  */
 abstract class Model
 {
+	public function __construct()
+	{
+	}
 
-	private static $table_name = null;
+	/**
+	 * Método que recupera o mapeamento das colunas das tabelas
+	 * Sendo a chave o nome da coluna presente na tabela
+	 * e o tipo de dado o valor do array
+	 * Caso o usuário tenha personalizado o método Class::table_map()
+	 * retorna o mapeamento alternativo
+	 *
+	 * @internal
+	 * @return array chave-valor ['nome_da_coluna' => 'tipo_de_dado']
+	 */
+	protected static function get_table_map()
+	{
+		$called = get_called_class();
+		if(!method_exists($called, 'table_map'))
+		{
+			$query = new Query();
+			// Faz consulta sobre a estrutura da tabela
+			$response = $query->builder(
+				'SELECT column_name col, data_type dat FROM information_schema.columns WHERE table_name = \'' .
+				self::get_table_name() .
+				'\' AND table_schema = \'' .
+				Config::database()['dbname'] .
+				'\'')->execute();
+			$map = [];
+			// Cria mapeamento
+			foreach($response as $object)
+			{
+				$map[$object->col] = $object->dat;
+			}
+			return $map;
+		}
+		// Caso o usuário tenha personalizado um mapeamento diferente
+		return $called::table_map();
+	}
+
+	/**
+	 * Método que recupera o nome da tabela no banco de dados
+	 * Por padrão, Pure entende que o mesmo nome do modelo será utilizado no banco de dados
+	 * Caso o usuário tenha personalizado o método Class::table_name()
+	 * retorna o nome personalizado
+	 *
+	 * @internal
+	 * @return string nome do banco de dados
+	 */
+	protected static function get_table_name()
+	{
+		$called = get_called_class();
+		if(method_exists($called, 'table_name'))
+		{
+			// Caso o usuário tenha personalizado um nome diferente para a tabela em banco
+			return $called::table_name();
+		}
+		// Nome baseado no nome da classe
+		return strtolower(explode('\\',$called)[2]);
+	}
+
+	/**
+	 * Realiza a inserção de registro no banco de dados por meio de um instance
+	 * de uma classe de modelo
+	 * 
+	 * Utiliza o comando de inserção INSERT do SQL,
+	 * cada dado preenchido no modelo será um item da clausula VALUES
+	 *
+	 * @param Model $entities objeto que herde Model 
+	 * @return boolean resultado da inserção
+	 */
+	public static function insert(Model $entities)
+	{
+		$map = self::get_table_map();
+		$query = new Query();
+		foreach($map as $field => &$value)
+		{
+			if (property_exists($entities, $field))
+			{
+				$value = '\'' . $entities->$field . '\'';
+			} else {
+				unset($map[$field]);
+			}
+		}
+		$query->builder(
+			'INSERT INTO ' . self::get_table_name() . ' (' .
+			implode(', ', array_keys($map)) .
+			') VALUES (' .
+			implode(', ', array_values($map)) .
+			')');
+		$db = Database::get_instance();
+		return $db->execute_update($query);
+	}
 
 	/**
 	 * Realiza a construção de um Query Builder para seleção de dados
@@ -28,8 +120,6 @@ abstract class Model
 	 */
 	public static function select(array $columns = [], $as = '')
 	{
-		if (self::$table_name === null) self::set_class_name();
-
 		$query = new Query();
 		$query->builder('SELECT ');
 		if (empty($columns))
@@ -39,7 +129,7 @@ abstract class Model
 		{
 			$query->builder(implode(', ', $columns));
 		}
-		$query->builder(' FROM ' . self::$table_name  . ' ' . $as );
+		$query->builder(' FROM ' . self::get_table_name()  . ' ' . $as );
 		return $query;
 	}
 
@@ -60,20 +150,19 @@ abstract class Model
 	 */
 	public static function find($filters = null)
 	{
-		if(self::$table_name === null) self::set_class_name();
 		$query = new Query();
 		$query->builder('SELECT * FROM ');
 		if ($filters === null)
 		{
-			$query->builder(self::$table_name);
+			$query->builder(self::get_table_name());
 		}
 		else if (is_int($filters))
 		{
-			$query->builder(self::$table_name . ' WHERE id = ' . $filters);
+			$query->builder(self::get_table_name() . ' WHERE id = ' . $filters);
 		}
 		else if (is_array($filters))
 		{
-			$query->builder(self::$table_name . ' WHERE ' .
+			$query->builder(self::get_table_name() . ' WHERE ' .
 				implode(' && ', array_map(
 					function ($v, $k) {
 						return $k . ' LIKE \'' . $v . '\'';
@@ -93,7 +182,6 @@ abstract class Model
 	 */
 	public static function update($entities)
 	{
-		if(self::$table_name === null) self::set_class_name();
 	}
 
 	/**
@@ -102,25 +190,6 @@ abstract class Model
 	 */
 	public static function delete($entities)
 	{
-		if(self::$table_name === null) self::set_class_name();
-	}
-
-	/**
-	 * @todo
-	 * @param mixed $entities
-	 */
-	public static function insert($entities)
-	{
-		if(self::$table_name === null) self::set_class_name();
-	}
-
-	/**
-	 * Método que recupera valor da tabela em banco de dados
-	 * @internal
-	 */
-	private static function set_class_name()
-	{
-		self::$table_name = strtolower(explode('\\',get_called_class())[2]);
 	}
 
 	/**
@@ -134,10 +203,6 @@ abstract class Model
 	 */
 	public static function build($string = '')
 	{
-		if(self::$table_name === null)
-		{
-			self::set_class_name();
-		}
 		$query = new Query;
 		return $query->builder($string);
 	}

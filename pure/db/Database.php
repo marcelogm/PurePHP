@@ -91,7 +91,7 @@ class Database
 	 *
 	 * @param Query $query a ser executada
 	 * @throws DatabaseException caso não seja uma query valida
-	 * @return array dados do banco
+	 * @return array array de objetos do banco de dados
 	 */
 	public function execute_query($query)
 	{
@@ -108,6 +108,30 @@ class Database
 		} catch(\Exception $e)
 		{
 			throw new DatabaseException('Falha ao executar query: ' .
+				$query->generate() .
+				' Mais informações: ' .
+				$e->getMessage()
+			);
+		}
+	}
+
+	/**
+	 * Executa inserção de valor no banco de dados
+	 *
+	 * @param mixed $query de inserção de dados
+	 * @throws DatabaseException caso não seja uma inserção válida
+	 * @return boolean resultado da inserção
+	 */
+	public function execute_update($query)
+	{
+		try {
+			$statement = $this->connection->prepare($query->generate());
+			var_dump($query->generate());
+			return $statement->execute();
+		}
+		catch(\Exception $e)
+		{
+			throw new DatabaseException('Falha ao executar inserção: ' .
 				$query->generate() .
 				' Mais informações: ' .
 				$e->getMessage()
