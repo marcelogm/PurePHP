@@ -19,11 +19,6 @@ function __autoload($classname)
     $filename .= str_replace('_', '/', $classname) . '.php';
     $to_require = BASE_PATH.$filename;
     require_once($to_require);
-	if(method_exists(($namespace . '\\' . $classname), 'static_init'))
-	{
-		$class = ($namespace . '\\' . $classname);
-		$class::static_init();
-	}
 }
 
 ?>
