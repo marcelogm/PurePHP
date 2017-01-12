@@ -89,7 +89,7 @@ class Database
 	/**
 	 * Executa query no banco de dados
 	 *
-	 * @param Query $query a ser executada
+	 * @param SQLBuilder $query a ser executada
 	 * @throws DatabaseException caso não seja uma query valida
 	 * @return array array de objetos do banco de dados
 	 */
@@ -118,7 +118,7 @@ class Database
 	/**
 	 * Executa inserção de valor no banco de dados
 	 *
-	 * @param mixed $query de inserção de dados
+	 * @param SQLBuilder $query de inserção de dados
 	 * @throws DatabaseException caso não seja uma inserção válida
 	 * @return boolean resultado da inserção
 	 */

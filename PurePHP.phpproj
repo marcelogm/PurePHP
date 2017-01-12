@@ -26,10 +26,12 @@
     <Compile Include="app\model\Person.php" />
     <Compile Include="index.php" />
     <Compile Include="pure\base\Controller.php" />
+    <Compile Include="pure\base\Enum.php" />
     <Compile Include="pure\base\Exception.php" />
     <Compile Include="pure\base\Model.php" />
     <Compile Include="pure\db\Database.php" />
-    <Compile Include="pure\db\Query.php" />
+    <Compile Include="pure\db\SQLBuilder.php" />
+    <Compile Include="pure\db\SQLType.php" />
     <Compile Include="pure\exceptions\ClassException.php" />
     <Compile Include="pure\exceptions\DatabaseException.php" />
     <Compile Include="pure\exceptions\RouteException.php" />
