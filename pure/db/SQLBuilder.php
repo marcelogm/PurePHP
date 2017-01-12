@@ -20,6 +20,11 @@ class SQLBuilder
 	private $string;
 	private $type;
 
+	/**
+	 * Construtor da classe
+	 *
+	 * @param int $type tipo de linguagem SQL a ser utilizada
+	 */
 	public function __construct($type = SQLType::DQL)
 	{
 		$this->type = $type;
@@ -99,6 +104,51 @@ class SQLBuilder
 	}
 
 	/**
+	 * Realiza o agrupamentos dos dados da consulta,
+	 * agrupando de acordo com o valor escolhido.
+	 *
+	 * Adiciona GROUP BY na consulta SQL para cada coluna
+	 *
+	 * - String: 'coluna'
+	 * - Resultado: GROUP BY coluna
+	 *
+	 * - Array: ['valor_1', 'valor_2', valor_3]
+	 * - Resultado: GROUP BY valor_1, valor_2, valor_3
+	 *
+	 * @param string or array $columns coluna ou array de colunas que definem o agrupamento
+	 * @return SQLBuilder objeto do Query Builder
+	 */
+	public function group_by($columns)
+	{
+		if(is_string($columns))
+		{
+			$this->string .= ' GROUP BY ' . $columns;
+		}
+		else if (is_array($columns) && !empty($columns))
+		{
+			$this->string .= ' GROUP BY ' . implode(', ', $columns);
+		}
+		return $this;
+	}
+
+	/**
+	 * Realiza a seleção de valores dentro de um universo de posibilidaes
+	 * representadas em um array de valores
+	 *
+	 * - Array: ['valor_1','valor_2','valor_3']
+	 * - Resultado: IN ('valor_1', 'valor_2', valor_3)
+	 *
+	 * @param array $array
+	 */
+	public function in(array $array)
+	{
+		if(!empty($array))
+		{
+			$this->string .= ' IN (' . implode(', ', $array) . ') ';
+		}
+	}
+
+	/**
 	 * Realiza a ordenação dos dados presentes na consulta,
 	 * ordenando de acordo com a chave (coluna) e o valor (forma de ordenação)
 	 *
@@ -127,34 +177,6 @@ class SQLBuilder
 	}
 
 	/**
-	 * Realiza o agrupamentos dos dados da consulta,
-	 * agrupando de acordo com o valor escolhido.
-	 *
-	 * Adiciona GROUP BY na consulta SQL para cada coluna
-	 *
-	 * - String: 'coluna'
-	 * - Resultado: GROUP BY coluna
-	 *
-	 * - Array: ['valor_1', 'valor_2', valor_3]
-	 * - Resultado: GROUP BY valor_1, valor_2, valor_3
-	 *
-	 * @param string or array $columns coluna ou array de colunas que definem o agrupamento
-	 * @return SQLBuilder objeto do Query Builder
-	 */
-	public function group_by($columns)
-	{
-		if(is_string($columns))
-		{
-			$this->string .= ' GROUP BY' . $columns;
-		}
-		else if (is_array($columns) && !empty($columns))
-		{
-			$this->string .= ' GROUP BY ' . implode(', ', $columns);
-		}
-		return $this;
-	}
-
-	/**
 	 * Adiciona mais uma tabela a consulta atual por meio de JOIN
 	 *
 	 * Utiliza-se o método "on()" para definir
@@ -176,6 +198,23 @@ class SQLBuilder
 			$this->string .= $type . ' JOIN ' . $table_name;
 		}
 		return $this;
+	}
+
+	/**
+	 * Realiza a inserção da clausula HAVINGS, que faz a comparação entre
+	 * valores e funções de agregação
+	 *
+	 * - String: 'nome'
+	 * - Resultado: HAVING nome
+	 *
+	 * @param string $aggregation
+	 */
+	public function having($aggregation)
+	{
+		if(is_string($aggregation))
+		{
+			$this->string .= ' HAVING ' . $aggregation;
+		}
 	}
 
 	/**
@@ -272,7 +311,7 @@ class SQLBuilder
 	}
 
 	/**
-	 * Executa a consulta SQL gerada pelo Query Builder
+	 * Executa a consulta SQL gerada pelo SQLBuilder
 	 * retornando os valores obtidos do banco de dados.
 	 *
 	 * @return array lista de objetos do banco de dados
@@ -284,13 +323,12 @@ class SQLBuilder
 		switch($this->type)
 		{
 			case SQLType::DML:
+			case SQLType::DDL:
+			case SQLType::DCL:
 				$result = $db->execute_update($this);
 				break;
-			case SQLType::DDL:
-				break;
-			case SQLType::DCL:
-				break;
 			case SQLType::DTL:
+				
 				break;
 			case SQLType::DQL:
 			default:
@@ -301,7 +339,7 @@ class SQLBuilder
 	}
 
 	/**
-	 * Retorna a String de consulta gerada pelo Query Builder
+	 * Retorna a String de consulta gerada pelo SQLBuilder
 	 *
 	 * @return string String SQL
 	 */

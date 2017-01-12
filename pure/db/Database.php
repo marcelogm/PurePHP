@@ -116,7 +116,7 @@ class Database
 	}
 
 	/**
-	 * Executa inserção de valor no banco de dados
+	 * Executa inserção, alteração ou atualização de valor no banco de dados
 	 *
 	 * @param SQLBuilder $query de inserção de dados
 	 * @throws DatabaseException caso não seja uma inserção válida

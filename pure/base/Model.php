@@ -152,32 +152,6 @@ abstract class Model
 	}
 
 	/**
-	 * Realiza a construção de um SQLBuilder para seleção de dados
-	 * retornando um objeto que utiliza o comando SELECT em SQL.
-	 *
-	 * - Array: ['name', 'age']
-	 * - Resultado: SELECT name, age FROM model
-	 *
-	 * @see Pure\Db\SQLBuilder
-	 * @param array $columns filtro sobre colunas especificas da tabela
-	 * @return SQLBuilder objeto do SQLBuilder
-	 */
-	public static function select(array $columns = [], $as = '')
-	{
-		$sql = new SQLBuilder();
-		$sql->builder('SELECT ');
-		if (empty($columns))
-		{
-			$sql->builder('*');
-		} else
-		{
-			$sql->builder(implode(', ', $columns));
-		}
-		$sql->builder(' FROM ' . self::get_table_name()  . ' ' . $as );
-		return $sql;
-	}
-
-	/**
 	 * @todo
 	 * @param mixed $entities
 	 */
@@ -194,6 +168,39 @@ abstract class Model
 			}
 		}
 		*/
+	}
+
+	/**
+	 * Realiza a construção de um SQLBuilder para seleção de dados
+	 * retornando um objeto que utiliza o comando SELECT em SQL.
+	 *
+	 * - String: 'name'
+	 * - Resultado: SELECT name
+	 *
+	 * - Array: ['name', 'age']
+	 * - Resultado: SELECT name, age FROM model
+	 *
+	 * @see Pure\Db\SQLBuilder
+	 * @param string or array $columns filtro sobre colunas especificas da tabela
+	 * @return SQLBuilder objeto do SQLBuilder
+	 */
+	public static function select($columns = [])
+	{
+		$sql = new SQLBuilder();
+		$sql->builder('SELECT ');
+		if (is_string($columns))
+		{
+			$sql->builder($columns);
+		}
+		else if (is_array($columns) && !empty($columns))
+		{
+			$sql->builder(implode(', ', $columns));
+		} else
+		{
+			$sql->builder('*');
+		}
+		$sql->builder(' FROM ' . self::get_table_name());
+		return $sql;
 	}
 
 	/**
