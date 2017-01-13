@@ -10,10 +10,11 @@ namespace Pure\Util;
  * Possibilita também a geração de palavras aleatorias.
  *
  * @version 1.0
- * @author 00271922
+ * @author Marcelo Gomes Martins
  */
 class Hash
 {
+
 	private $MAX_ITERATIONS = 10000;
 	private $raw;
 	private $data;
@@ -202,4 +203,5 @@ class Hash
 	{
 		$this->iterations = ($this->has_iteration) ? mt_rand(1, $this->MAX_ITERATIONS) : 1;
 	}
+
 }
