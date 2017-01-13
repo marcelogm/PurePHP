@@ -126,6 +126,7 @@ class Database
 	{
 		try {
 			$statement = $this->connection->prepare($query->generate());
+			$this->connection->beginTransaction();
 			var_dump($query->generate());
 			return $statement->execute();
 		}
@@ -137,6 +138,21 @@ class Database
 				$e->getMessage()
 			);
 		}
+	}
+
+	public function begin()
+	{
+		return $this->connection->beginTransaction();
+	}
+
+	public function commit()
+	{
+		return $this->connection->commit();
+	}
+
+	public function rollback()
+	{
+		return $this->connection->rollBack();
 	}
 
 }

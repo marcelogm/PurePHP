@@ -49,13 +49,9 @@ class SQLBuilder
 	/**
 	 * Realiza a filtragem de valores com a clausula WHERE
 	 *
-	 * O método pode receber um array no formato chave-valor ou uma string simples.
-	 * No caso de chave-valor, o construtor de Query identifica que a chave
-	 * do array é o nome da coluna e o valor do array o filtro desejado. No caso
-	 * de uma string simples, o valor será uma referência para a coluna da tabela.
-	 *
-	 * - String: 'coluna'
-	 * - Resultado: WHERE coluna
+	 * O método pode receber um array no formato chave-valor
+	 * o construtor de Query identifica que a chave
+	 * do array é o nome da coluna e o valor do array o filtro desejado. 
 	 *
 	 * - Array: ['chave_1' => 'valor_1']
 	 * - Resultado: WHERE chave_1 = 'valor_1
@@ -63,17 +59,13 @@ class SQLBuilder
 	 * - Array: ['chave_1' => 'valor_1', 'chave_2' => 'valor_2']
 	 * - Resultado: WHERE chave_1 = 'valor_1' AND chave_2 = 'valor_2'
 	 *
-	 * @param string or array $filters nome da coluna ou filtros em formato 'coluna' => 'valor'
+	 * @param array $filters filtros em formato 'coluna' => 'valor'
 	 * @return SQLBuilder retorna a si mesmo, possibilitando Method Chaining.
 	 * @link https://en.wikipedia.org/wiki/Method_chaining
 	 */
-	public function where($filters)
+	public function where(array $filters)
 	{
-		if (is_string($filters))
-		{
-			$this->string .= ' WHERE ' . $filters;
-		}
-		else if (is_array($filters) && !empty($filters))
+		if (!empty($filters))
 		{
 			$this->string .= $this->iterator($filters, 'WHERE');
 		}

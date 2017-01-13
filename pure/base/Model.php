@@ -155,11 +155,10 @@ abstract class Model
 	 * @todo
 	 * @param mixed $entities
 	 */
-	public static function update($entities)
+	public static function update($columns = [])
 	{
-		/*
-		$map = self::get_table_map();
 		$sql = new SQLBuilder(SQLType::DML);
+		$sql->builder('UPDATE ' . self::get_table_name());
 		foreach($map as $fields => &$value)
 		{
 			if (property_exists($entities, $fields))
@@ -167,7 +166,6 @@ abstract class Model
 
 			}
 		}
-		*/
 	}
 
 	/**
