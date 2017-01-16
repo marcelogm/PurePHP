@@ -98,7 +98,7 @@ abstract class Model
 		{
 			$sql->builder(self::get_table_name());
 		}
-		else if ((int)filters)
+		else if ((int)$filters)
 		{
 			$sql->builder(self::get_table_name() . ' WHERE id = ' . $filters);
 		}
@@ -117,6 +117,15 @@ abstract class Model
 		}
 		$response = $sql->execute();
 		return (sizeof($response) === 1) ? $response[0] : $response;
+	}
+
+	/**
+	 * @todo
+	 * @param Model $entities
+	 */
+	public static function save(Model $entities)
+	{
+
 	}
 
 	/**
@@ -152,20 +161,35 @@ abstract class Model
 	}
 
 	/**
-	 * @todo
-	 * @param mixed $entities
+	 * Realiza a construção de um SQLBuilder para atualização de Dados
+	 * retornando um objeto que utiliza o comando UPDATE ... SET em SQL
+	 *
+	 * @param array $columns
+	 * @return SQLBuilder objeto do SQLBuilder
 	 */
-	public static function update($columns = [])
+	public static function update(array $columns, $id = null)
 	{
 		$sql = new SQLBuilder(SQLType::DML);
-		$sql->builder('UPDATE ' . self::get_table_name());
-		foreach($map as $fields => &$value)
+		$sql->builder('UPDATE ' . self::get_table_name() . ' SET ');
+		if (!empty($columns))
 		{
-			if (property_exists($entities, $fields))
-			{
-
-			}
+			$sql->builder(
+				implode(', ', 
+					array_map(
+						function ($key, $value) {
+							return $key . ' = ' . '\'' . $value . '\'';
+						},
+						array_keys($columns),
+						$columns
+					)
+				)
+			);
 		}
+		if ($id !== null && (int)$id)
+		{
+			$sql->builder(' WHERE id = ' . $id);
+		}
+		return $sql;
 	}
 
 	/**
@@ -182,7 +206,7 @@ abstract class Model
 	 * @param string or array $columns filtro sobre colunas especificas da tabela
 	 * @return SQLBuilder objeto do SQLBuilder
 	 */
-	public static function select($columns = [])
+	public static function select($columns)
 	{
 		$sql = new SQLBuilder();
 		$sql->builder('SELECT ');
@@ -193,7 +217,8 @@ abstract class Model
 		else if (is_array($columns) && !empty($columns))
 		{
 			$sql->builder(implode(', ', $columns));
-		} else
+		}
+		else
 		{
 			$sql->builder('*');
 		}

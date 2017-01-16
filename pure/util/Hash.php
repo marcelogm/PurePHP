@@ -118,10 +118,10 @@ class Hash
 		if ($this->data !== null)
 		{
 			return ['raw' => $this->raw,
-					'hash' => $this->data,
-					'salt' => $this->salt,
-					'timestamp' => $this->timestamp,
-					'iterations' => $this->iterations];
+				'hash' => $this->data,
+				'salt' => $this->salt,
+				'timestamp' => $this->timestamp,
+				'iterations' => $this->iterations];
 		}
 		return null;
 	}
