@@ -98,7 +98,7 @@ abstract class Model
 		{
 			$sql->builder(self::get_table_name());
 		}
-		else if ((int)$filters)
+		else if (is_int($filters))
 		{
 			$sql->builder(self::get_table_name() . ' WHERE id = ' . $filters);
 		}
@@ -107,7 +107,7 @@ abstract class Model
 			$sql->builder(self::get_table_name() . ' WHERE ' .
 				implode(' && ', array_map(
 						function ($key, $value) {
-							return $value . ' LIKE \'' . $key . '\'';
+							return $key . ' LIKE \'' . $value . '\'';
 						},
 						array_keys($filters),
 						$filters
@@ -128,9 +128,9 @@ abstract class Model
 	 * @param Model $entity
 	 * @return boolean resposta do banco de dados
 	 */
-	public static function save(Model $entity)
+	public static function save(self $entity)
 	{
-		if (isset($entity->id) && (int)$entity->id)
+		if (isset($entity->id) && is_int($entity->id))
 		{
 			return self::quick_update($entity);
 		}
@@ -148,7 +148,7 @@ abstract class Model
 	 * @param Model $entity objeto a ser atualizado
 	 * @return boolean resposta do banco de dados
 	 */
-	private static function quick_update(Model $entity)
+	private static function quick_update(self $entity)
 	{
 		$map = self::get_table_map();
 		$sql = new SQLBuilder(SQLType::DML);
@@ -177,7 +177,7 @@ abstract class Model
 	 * @param Model $entity objeto a ser inserido
 	 * @return boolean resposta do banco de dados
 	 */
-	private static function quick_insert(Model $entity)
+	private static function quick_insert(self $entity)
 	{
 		$map = self::get_table_map();
 		$sql = new SQLBuilder(SQLType::DML);

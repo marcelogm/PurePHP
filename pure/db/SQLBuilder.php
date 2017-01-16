@@ -49,7 +49,7 @@ class SQLBuilder
 	/**
 	 * Realiza a filtragem de valores com a clausula WHERE
 	 *
-	 * O método recebe um array no formato chave-valor sendo a 
+	 * O método recebe um array no formato chave-valor sendo a
 	 * chave do array o nome da coluna e o valor o filtro escolhido
 	 *
 	 * - Array: ['chave_1' => 'valor_1']
@@ -273,7 +273,7 @@ class SQLBuilder
 	 */
 	public function limit($limit)
 	{
-		if((int)$limit)
+		if(is_int($limit))
 		{
 			$this->string .= ' LIMIT ' . $limit;
 		}
@@ -294,7 +294,7 @@ class SQLBuilder
 	 */
 	public function offset($offset)
 	{
-		if((int)$offset)
+		if(is_int($offset))
 		{
 			$this->string .= ' OFFSET ' . $offset;
 		}
@@ -319,7 +319,7 @@ class SQLBuilder
 				$result = $db->execute_update($this);
 				break;
 			case SQLType::DTL:
-				
+
 				break;
 			case SQLType::DQL:
 			default:
