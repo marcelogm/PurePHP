@@ -130,14 +130,18 @@ abstract class Model
 	 */
 	public static function save(self $entity)
 	{
-		if (isset($entity->id) && is_int($entity->id))
+		if($entity::get_table_name() === self::get_table_name())
 		{
-			return self::quick_update($entity);
+			if (isset($entity->id) && is_int($entity->id))
+			{
+				return self::quick_update($entity);
+			}
+			else
+			{
+				return self::quick_insert($entity);
+			}
 		}
-		else
-		{
-			return self::quick_insert($entity);
-		}
+		return false;
 	}
 
 	/**
