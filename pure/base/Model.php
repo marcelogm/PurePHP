@@ -136,7 +136,7 @@ abstract class Model
 		}
 		else
 		{
-			return self::insert($entity)->execute();
+			return self::quick_insert($entity);
 		}
 	}
 
@@ -171,18 +171,13 @@ abstract class Model
 	}
 
 	/**
-	 * Realiza a inserção de registro no banco de dados por meio de um instance
-	 * de uma classe de modelo
+	 * Realiza a inserção de um objeto em banco de acordo com as informações
+	 * contidas no objeto relacional
 	 *
-	 * Utiliza o comando de inserção INSERT do SQL,
-	 * cada dado preenchido no modelo será um item da clausula VALUES
-	 *
-	 * - Resultado: INSERT INTO ('name', 'age') VALUES ('marcelo', '21')
-	 *
-	 * @param Model $entity objeto que herde Model
-	 * @return SQLBuilder resultado da inserção
+	 * @param Model $entity objeto a ser inserido
+	 * @return boolean resposta do banco de dados
 	 */
-	public static function insert(Model $entity)
+	private static function quick_insert(Model $entity)
 	{
 		$map = self::get_table_map();
 		$sql = new SQLBuilder(SQLType::DML);
@@ -201,7 +196,41 @@ abstract class Model
 				implode(', ', array_keys($map)) .
 				') VALUES (' .
 				implode(', ', array_values($map)) .
-				')');
+				')'
+		)->execute();
+	}
+
+	/**
+	 * Realize a construção de um SQLBuilder para atualização de Dados
+	 * retornando um objeto que utiliza o comando INSERT INTO em SQL
+	 *
+	 * O método recebe um array no formato chave-valor sendo a chave do
+	 * array o nome da coluna e o valor o dado a ser inserido em banco
+	 *
+	 * - Array: ['chave_1' => 'valor_1']
+	 * - Resultado: INSERT INTO table_name (chave_1) VALUES ('valor_1')
+	 *
+	 * - Array: ['chave_1' => 'valor_1', 'chave_2' => 'valor_2']
+	 * - Resultado: INSERT INTO table_name (chave_1, chave_2)  VALUES ('valor_1', 'valor_2')
+	 *
+	 * @param array $columns dados em formato 'coluna' => 'valor'
+	 * @return SQLBuilder objeto do SQLBuilder
+	 */
+	public static function insert(array $columns)
+	{
+		$sql = new SQLBuilder(SQLType::DML);
+		$sql->builder('INSERT INTO ' . self::get_table_name());
+		if (!empty($columns))
+		{
+			$sql->builder(
+				'(' .
+				implode(', ', array_keys($columns)) .
+				') VALUES (' .
+				implode(', ', array_values($columns)) .
+				')'
+			);
+		}
+		return $sql;
 	}
 
 	/**
@@ -227,7 +256,7 @@ abstract class Model
 	 * @param mixed $id especificação de id
 	 * @return SQLBuilder objeto do SQLBuilder
 	 */
-	public static function update(array $columns, $id = null)
+	public static function update(array $columns = [], $id = null)
 	{
 		$sql = new SQLBuilder(SQLType::DML);
 		$sql->builder('UPDATE ' . self::get_table_name() . ' SET ');
@@ -236,10 +265,10 @@ abstract class Model
 			$sql->builder(
 				self::iterator($columns)
 			);
-		}
-		if ($id !== null && (int)$id)
-		{
-			$sql->builder(' WHERE id = ' . $id);
+			if ($id !== null && (int)$id)
+			{
+				$sql->builder(' WHERE id = ' . $id);
+			}
 		}
 		return $sql;
 	}
