@@ -120,12 +120,54 @@ abstract class Model
 	}
 
 	/**
-	 * @todo
-	 * @param Model $entities
+	 * Realiza a inserção rápida de dados.
+	 * Caso a instance do objeto passada por parâmetro possua um id,
+	 * o objeto será atualizado em banco de dados utilizando UPDATE
+	 * Caso não exista id no objeto, será realizada uma nova entrada por meio do INSERT
+	 *
+	 * @param Model $entity
+	 * @return boolean resposta do banco de dados
 	 */
-	public static function save(Model $entities)
+	public static function save(Model $entity)
 	{
+		if (isset($entity->id) && (int)$entity->id)
+		{
+			return self::quick_update($entity);
+		}
+		else
+		{
+			return self::insert($entity)->execute();
+		}
+	}
 
+	/**
+	 * Realiza a atualização de um objeto em banco de acordo com as informações
+	 * digitadas pelo usuário utilizando o id como base de comparação
+	 *
+	 * @internal
+	 * @param Model $entity objeto a ser atualizado
+	 * @return boolean resposta do banco de dados
+	 */
+	private static function quick_update(Model $entity)
+	{
+		$map = self::get_table_map();
+		$sql = new SQLBuilder(SQLType::DML);
+		foreach($map as $column => &$value)
+		{
+			if(property_exists($entity, $column))
+			{
+				$value = $entity->$column;
+			}
+			else
+			{
+				unset($map[$column]);
+			}
+		}
+		return $sql->builder('UPDATE ' . self::get_table_name() . ' SET ' .
+			self::iterator($map) .
+			' WHERE id = ' .
+			$map['id']
+		)->execute();
 	}
 
 	/**
@@ -137,20 +179,22 @@ abstract class Model
 	 *
 	 * - Resultado: INSERT INTO ('name', 'age') VALUES ('marcelo', '21')
 	 *
-	 * @param Model $entities objeto que herde Model
+	 * @param Model $entity objeto que herde Model
 	 * @return SQLBuilder resultado da inserção
 	 */
-	public static function insert(Model $entities)
+	public static function insert(Model $entity)
 	{
 		$map = self::get_table_map();
 		$sql = new SQLBuilder(SQLType::DML);
-		foreach($map as $field => &$value)
+		foreach($map as $column => &$value)
 		{
-			if (property_exists($entities, $field))
+			if (property_exists($entity, $column))
 			{
-				$value = '\'' . $entities->$field . '\'';
-			} else {
-				unset($map[$field]);
+				$value = '\'' . $entity->$column . '\'';
+			}
+			else
+			{
+				unset($map[$column]);
 			}
 		}
 		return $sql->builder('INSERT INTO ' . self::get_table_name() . ' (' .
@@ -164,7 +208,23 @@ abstract class Model
 	 * Realiza a construção de um SQLBuilder para atualização de Dados
 	 * retornando um objeto que utiliza o comando UPDATE ... SET em SQL
 	 *
-	 * @param array $columns
+	 * O método recebe um array no formato chave-valor sendo a chave
+	 * do array o nome da coluna e o valor o dado a ser atualizado em banco
+	 *
+	 * É EXTREMAMENTE IMPORTANTE lembrar da utilização da cláusula
+	 * WHERE na manipulação de dados com UPDATE ... SET.
+	 *
+	 * - Array: ['chave_1' => 'valor_1']
+	 * - Resultado: UPDATE table_name SET chave_1 = 'valor_1'
+	 *
+	 * - Array: ['chave_1' => 'valor_1', 'chave_2' => 'valor_2']
+	 * - Resultado: UPDATE table_name SET chave_1 = 'valor_1', chave_2 = 'valor_2'
+	 *
+	 * É possivel utilizar o parametro 'id' para especificar qual item será
+	 * atualizado em banco
+	 *
+	 * @param array $columns dados em formato 'coluna' => 'valor'
+	 * @param mixed $id especificação de id
 	 * @return SQLBuilder objeto do SQLBuilder
 	 */
 	public static function update(array $columns, $id = null)
@@ -174,15 +234,7 @@ abstract class Model
 		if (!empty($columns))
 		{
 			$sql->builder(
-				implode(', ', 
-					array_map(
-						function ($key, $value) {
-							return $key . ' = ' . '\'' . $value . '\'';
-						},
-						array_keys($columns),
-						$columns
-					)
-				)
+				self::iterator($columns)
 			);
 		}
 		if ($id !== null && (int)$id)
@@ -206,7 +258,7 @@ abstract class Model
 	 * @param string or array $columns filtro sobre colunas especificas da tabela
 	 * @return SQLBuilder objeto do SQLBuilder
 	 */
-	public static function select($columns)
+	public static function select($columns = [])
 	{
 		$sql = new SQLBuilder();
 		$sql->builder('SELECT ');
@@ -227,11 +279,19 @@ abstract class Model
 	}
 
 	/**
-	 * @todo
-	 * @param mixed $entities
+	 * Realzia a construção de um SQLBuilder para exclusão de dados
+	 * retornando um objeto que utiliza o comando DELETE FROM em SQL.
+	 *
+	 * É EXTREMAMENTE IMPORTANTE lembrar da utilização da cláusula
+	 * WHERE na manipulação de dados com DELETE FROM.
+	 *
+	 * @return SQLBuilder objeto do SQLBuilder
 	 */
-	public static function delete($entities)
+	public static function delete()
 	{
+		$sql = new SQLBuilder(SQLType::DML);
+		$sql->builder('DELETE FROM ' . self::get_table_name() . ' ');
+		return $sql;
 	}
 
 	/**
@@ -247,6 +307,26 @@ abstract class Model
 	{
 		$sql = new SQLBuilder($type);
 		return $sql->builder($string);
+	}
+
+	/**
+	 * Realiza o mapeamento de uma classe em uma string utilizada
+	 * no SQLBuilder
+	 *
+	 * @param array $array dados a serem iterados
+	 * @return string concatenação dos itens
+	 */
+	private static function iterator(array $array)
+	{
+		return implode(', ',
+			array_map(
+				function ($key, $value) {
+					return $key . ' = ' . '\'' . $value . '\'';
+				},
+				array_keys($array),
+				$array
+			)
+		);
 	}
 
 }

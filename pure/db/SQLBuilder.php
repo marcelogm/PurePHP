@@ -49,9 +49,8 @@ class SQLBuilder
 	/**
 	 * Realiza a filtragem de valores com a clausula WHERE
 	 *
-	 * O método pode receber um array no formato chave-valor
-	 * o construtor de Query identifica que a chave
-	 * do array é o nome da coluna e o valor do array o filtro desejado. 
+	 * O método recebe um array no formato chave-valor sendo a 
+	 * chave do array o nome da coluna e o valor o filtro escolhido
 	 *
 	 * - Array: ['chave_1' => 'valor_1']
 	 * - Resultado: WHERE chave_1 = 'valor_1
@@ -306,7 +305,7 @@ class SQLBuilder
 	 * Executa a consulta SQL gerada pelo SQLBuilder
 	 * retornando os valores obtidos do banco de dados.
 	 *
-	 * @return array lista de objetos do banco de dados
+	 * @return array or boolean lista de objetos do banco de dados ou resultado da inserção
 	 */
 	public function execute()
 	{
