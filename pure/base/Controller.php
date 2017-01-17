@@ -14,7 +14,6 @@ namespace Pure\Base;
  */
 abstract class Controller
 {
-	private $page = '';
 	protected $data = [];
 
 	private $session;
@@ -73,7 +72,7 @@ abstract class Controller
 		{
 			$$name = $item;
 		}
-		include($this->page);
+		include($page);
 	}
 
 }
