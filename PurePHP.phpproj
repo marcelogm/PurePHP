@@ -39,10 +39,12 @@
     <Compile Include="pure\exceptions\RouteException.php" />
     <Compile Include="pure\kernel\autoloader.php" />
     <Compile Include="pure\kernel\Engine.php" />
-    <Compile Include="pure\util\Hash.php" />
-    <Compile Include="pure\util\SecurityManager.php" />
     <Compile Include="pure\routes\Route.php" />
     <Compile Include="pure\routes\UrlManager.php" />
+    <Compile Include="pure\util\AuthManager.php" />
+    <Compile Include="pure\util\Hash.php" />
+    <Compile Include="pure\util\Security.php" />
+    <Compile Include="pure\util\Session.php" />
     <Compile Include="README.md" />
   </ItemGroup>
   <ItemGroup>

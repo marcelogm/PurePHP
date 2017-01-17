@@ -11,8 +11,9 @@ namespace Pure\Util;
  * @version 1.0
  * @author Marcelo Gomes Martins
  */
-class SecurityManager
+class Security
 {
+	private $session_name = null;
 	private static $instance = null;
 
 	/**
@@ -31,14 +32,36 @@ class SecurityManager
 	 *
 	 * @see Singleton
 	 * @link https://pt.wikipedia.org/wiki/Singleton
-	 * @return SecurityManager
+	 * @return Security
 	 */
 	public static function get_instance()
 	{
 		if (self::$instance === null)
 		{
-			self::$instance = new SecurityManager();
+			self::$instance = new Security();
 		}
 		return self::$instance;
+	}
+
+	/**
+	 * Gera nome de sessão individual para cada usuário
+	 * Camada de segurança necessária para evitar roubos de session
+	 * relacionados ao nome de padrão do cookie.
+	 *
+	 * @see PHPSESSID 
+	 * @return string
+	 */
+	public function session_name()
+	{
+		if ($this->session_name === null)
+		{
+			$name = new Hash();
+			$this->session_name = $name->generate(
+				'CustomSession' .
+				$_SERVER['REMODE_ADDR'] .
+				$_SERVER['HTTP_USER_AGENT']
+			);
+		}
+		return $this->session_name;
 	}
 }
