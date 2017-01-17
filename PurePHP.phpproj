@@ -24,6 +24,8 @@
     <Compile Include="app\controller\SiteController.php" />
     <Compile Include="app\model\Image.php" />
     <Compile Include="app\model\Person.php" />
+    <Compile Include="app\view\layout\default.php" />
+    <Compile Include="app\view\pages\index.php" />
     <Compile Include="index.php" />
     <Compile Include="pure\base\Controller.php" />
     <Compile Include="pure\base\Enum.php" />
@@ -49,6 +51,8 @@
     <Folder Include="app\controller\" />
     <Folder Include="app\model\" />
     <Folder Include="app\view\" />
+    <Folder Include="app\view\layout\" />
+    <Folder Include="app\view\pages\" />
     <Folder Include="pure\" />
     <Folder Include="pure\base\" />
     <Folder Include="pure\kernel\" />

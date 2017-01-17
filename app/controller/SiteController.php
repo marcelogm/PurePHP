@@ -18,11 +18,8 @@ class SiteController extends Controller
 
 	public function index_action()
 	{
-		$image = new Image();
-		$person = new Person();
-		$image->image_url = 'teste1';
-		$image->page_url = 'teste2';
-		Image::save($person);
+		$this->data = ['teste' => 'testando'];
+		$this->render();
 	}
 
 }

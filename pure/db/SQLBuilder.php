@@ -319,7 +319,7 @@ class SQLBuilder
 				$result = $db->execute_update($this);
 				break;
 			case SQLType::DTL:
-
+				$result = $db->execute_query($this);
 				break;
 			case SQLType::DQL:
 			default:

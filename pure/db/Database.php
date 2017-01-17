@@ -90,6 +90,7 @@ class Database
 	 * Executa query no banco de dados
 	 *
 	 * @param SQLBuilder $query a ser executada
+	 * @param boolean $transaction executar transação
 	 * @throws DatabaseException caso não seja uma query valida
 	 * @return array array de objetos do banco de dados
 	 */
@@ -97,16 +98,18 @@ class Database
 	{
 		$list = [];
 		try {
+			$this->begin();
 			$statement = $this->connection->prepare($query->generate());
-			var_dump($query->generate());
 			$statement->execute();
 			while($object = $statement->fetchObject())
 			{
 				array_push($list, $object);
 			}
+			$this->commit();
 			return $list;
 		} catch(\Exception $e)
 		{
+			$this->rollback();
 			throw new DatabaseException('Falha ao executar query: ' .
 				$query->generate() .
 				' Mais informações: ' .
@@ -119,19 +122,23 @@ class Database
 	 * Executa inserção, alteração ou atualização de valor no banco de dados
 	 *
 	 * @param SQLBuilder $query de inserção de dados
+	 * @param boolean $transaction executar transação
 	 * @throws DatabaseException caso não seja uma inserção válida
 	 * @return boolean resultado da inserção
 	 */
 	public function execute_update($query)
 	{
 		try {
+			$this->begin();
 			$statement = $this->connection->prepare($query->generate());
 			$this->connection->beginTransaction();
-			var_dump($query->generate());
-			return $statement->execute();
+			$result = $statement->execute();
+			$this->commit();
+			return $result;
 		}
 		catch(\Exception $e)
 		{
+			$this->rollback();
 			throw new DatabaseException('Falha ao executar inserção: ' .
 				$query->generate() .
 				' Mais informações: ' .
@@ -140,16 +147,28 @@ class Database
 		}
 	}
 
+	/**
+	 * Inicia transação
+	 * @return boolean
+	 */
 	public function begin()
 	{
 		return $this->connection->beginTransaction();
 	}
 
+	/**
+	 * Finalzia transação
+	 * @return boolean
+	 */
 	public function commit()
 	{
 		return $this->connection->commit();
 	}
 
+	/**
+	 * Aborta a transação em caso de falha
+	 * @return boolean
+	 */
 	public function rollback()
 	{
 		return $this->connection->rollBack();
