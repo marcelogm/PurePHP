@@ -2,7 +2,7 @@
 namespace Pure\Kernel;
 use Pure\Routes\Route;
 use Pure\Routes\UrlManager;
-use Pure\Base\Controller;
+use Pure\Bases\Controller;
 use Pure\Exceptions\ClassException;
 
 /**
@@ -21,14 +21,18 @@ use Pure\Exceptions\ClassException;
 class Engine
 {
 	private static $instance = null;
-	
+	private $manager;
+
 	/**
 	 * Método construtor
 	 *
 	 * @access privado para proibir novas instances.
 	 * @internal função de uso interno
 	 */
-	private function __construct() {}
+	private function __construct()
+	{
+		$this->manager = UrlManager::get_instance();
+	}
 
 	private function __clone(){}
 	private function __wakeup(){}
@@ -56,11 +60,21 @@ class Engine
 	 */
 	public function execute()
 	{
-		$manager = UrlManager::get_instance();
-		$route = $manager->get_route();
-		if (!$manager->route_exists($route))
+		$route = $this->manager->get_route();
+		$this->load_route($route);
+	}
+
+	/**
+	 * Carrega controller na mémoria e executa a action
+	 * de determinada rota
+	 *
+	 * @param Route $route rota a ser carregada
+	 */
+	public function load_route(Route $route)
+	{
+		if (!$this->manager->route_exists($route))
 		{
-			$route = $manager->get_error_route();
+			$route = $this->manager->get_error_route();
 		}
 		$controller = $this->load_controller($route);
 		$this->load_action($controller, $route);
@@ -75,7 +89,7 @@ class Engine
 	 */
 	private function load_controller(Route $route)
 	{
-		$class = 'app\\controller\\' . $route->get_controller();
+		$class = 'app\\controllers\\' . $route->get_controller();
 		if (!class_exists($class))
 		{
 			throw new ClassException('O controller ' . $class . ' não existe.');

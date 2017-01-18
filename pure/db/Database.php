@@ -79,11 +79,11 @@ class Database
 	private function config_validation($config)
 	{
 		return (is_array($config) &&
-				array_key_exists('address', $config) &&
-				array_key_exists('port', $config) &&
-				array_key_exists('dbname', $config) &&
-				array_key_exists('username', $config) &&
-				array_key_exists('password', $config));
+			array_key_exists('address', $config) &&
+			array_key_exists('port', $config) &&
+			array_key_exists('dbname', $config) &&
+			array_key_exists('username', $config) &&
+			array_key_exists('password', $config));
 	}
 
 	/**

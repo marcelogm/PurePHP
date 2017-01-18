@@ -1,6 +1,6 @@
 <?php
 namespace Pure\Exceptions;
-use Pure\Base\Exception;
+use Pure\Bases\Exception;
 
 /**
  * Exception de Rota

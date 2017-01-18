@@ -1,6 +1,6 @@
 <?php
 namespace Pure\Db;
-use Pure\Base\Enum;
+use Pure\Bases\Enum;
 
 /**
  * Define os tipos básicos de consultas e inserções

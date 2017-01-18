@@ -15,6 +15,7 @@ use Pure\Exceptions\RouteException;
 class UrlManager
 {
 	private static $instance = null;
+	private $base_url;
 
 	/**
 	 * Método construtor
@@ -22,7 +23,9 @@ class UrlManager
 	 * @access privado para proibir novas instances
 	 * @internal função de uso interno
 	 */
-	private function __construct() {}
+	private function __construct() {
+		$this->base_url = UrlManager::set_base_url();
+	}
 
 	private function __clone(){}
 	private function __wakeup(){}
@@ -100,6 +103,29 @@ class UrlManager
 	}
 
 	/**
+	 * Gera a URL base do serviço acessado pelo usuário 
+	 * @return string url base da aplicação
+	 */
+	private static function set_base_url()
+	{
+		$path = $_SERVER['PHP_SELF'];
+		$info = pathinfo($path);
+		$hostname = $_SERVER['HTTP_HOST'];
+		$protocol = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, 5));
+		$protocol = strpos($protocol, 'https') ? 'https://' : 'http://';
+		return $protocol . $hostname . $info['dirname'] . '/';
+	}
+
+	/**
+	 * Recupera a URL base do serviço acessado pelo usuário
+	 * @return string url base da aplicação
+	 */
+	public function get_base_url()
+	{
+		return $this->base_url;
+	}
+
+	/**
 	 * Verifica se a rota enviada por parametro é válida.
 	 *
 	 * @param Route $route a ser verificada
@@ -107,8 +133,8 @@ class UrlManager
 	 */
 	public function route_exists(Route $route)
 	{
-		$class = 'app\\controller\\' . $route->get_controller();
-		$filename = 'app/controller/' . $route->get_controller() . '.php';
+		$class = 'app\\controllers\\' . $route->get_controller();
+		$filename = 'app/controllers/' . $route->get_controller() . '.php';
 		$action = $route->get_action();
 		return (is_file($filename) && class_exists($class) && method_exists($class, $action));
 	}
