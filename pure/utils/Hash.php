@@ -49,7 +49,7 @@ class Hash
 		$word = '';
 		$len = 62;
 		$charset = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		for($i = 0; $i < 62; $i++)
+		for($i = 0; $i < $length; $i++)
 		{
 			$word .= $charset[mt_rand(0, $len - 1)];
 		}
@@ -83,7 +83,7 @@ class Hash
 	 * @param bool $has_salt concatenar salt
 	 * @param bool $has_iteration repetir processo de encriptação
 	 * @param bool $has_timestamp concatenar timestamp atual
-	 * @return string or null hash ou null, caso a string $secret seja vazia
+	 * @return \null|Hash hash ou null, caso a string $secret seja vazia
 	 */
 	public function generate($secret, $has_salt = false, $has_iteration = false, $has_timestamp = false)
 	{
@@ -94,6 +94,33 @@ class Hash
 			$this->has_salt = $has_salt;
 			$this->raw = $secret;
 			return $this->hashing();
+		}
+		return null;
+	}
+
+	/**
+	 * Gera uma hash SHA256 com base em uma palavra enviada por parâmetro,
+	 * juntamente com um possivel salt, iterations e timestamp escolhidos pelo usuário.
+	 *
+	 * Formato do segredo completo:
+	 * $value = segredo_bruto . salt . timestamp
+	 * hash('sha256', $value) x número de iterações
+	 *
+	 * @param string $secret segredo a ser encriptado
+	 * @param null|int $salt salt para concatenacao
+	 * @param null|int $iterations numero de repetiçoes
+	 * @param null|int $timestamp timestamp para concatenacao
+	 * @return \null|Hash hash ou null, caso a string $secret seja vazia
+	 */
+	public function generate_with($secret, $salt = null, $iterations = null, $timestamp = null)
+	{
+		if (strlen($secret) > 0)
+		{
+			$this->has_salt =  ($salt !== null);
+			$this->has_iteration = ($iterations !== null);
+			$this->has_timestamp = ($timestamp !== null);
+			$this->raw = $secret;
+			return $this->hashing($salt, $timestamp, $iterations);
 		}
 		return null;
 	}
@@ -142,30 +169,32 @@ class Hash
 	 *
 	 * @return null or string
 	 */
-	private function hashing()
+	private function hashing($salt = null, $timestamp = null, $iterations = null)
 	{
 		$this->data = $this->raw;
-		$this->set_salt();
-		$this->set_timestamp();
-		$this->set_iterations();
+		$this->set_salt($salt);
+		$this->set_timestamp($timestamp);
+		$this->set_iterations($iterations);
 		for($i = 0; $i < $this->iterations; $i++)
 		{
 			$this->data = hash('sha256', $this->data);
 		}
-		return $this->get_hash();
+		return $this;
 	}
 
 	/**
 	 * Utilizada no processo de criação da hash
-	 * Gera e concatena o Timestamp
+	 * Se $timestamp for nulo: gera e concatena o Timestamp
+	 * Não sendo, concatena o Timestamp enviado pelo usuário.
 	 *
 	 * @internal
+	 * @param string $timestamp personalizado pelo usuário
 	 */
-	private function set_timestamp()
+	private function set_timestamp($timestamp = null)
 	{
 		if ($this->has_timestamp)
 		{
-			$this->timestamp = time();
+			$this->timestamp = ($timestamp === null) ? time() : $timestamp;
 			$this->data .= $this->timestamp;
 		}
 		else
@@ -176,15 +205,17 @@ class Hash
 
 	/**
 	 * Utilizada no processo de criação da hash
-	 * Gera e concatena o Salt
+	 * Se $salt for nulo: gera e concatena o Salt
+	 * Não sendo, concatena o Salt enviado pelo usuário.
 	 *
 	 * @internal
+	 * @param string $salt
 	 */
-	private function set_salt()
+	private function set_salt($salt = null)
 	{
 		if ($this->has_salt)
 		{
-			$this->salt = mt_rand();
+			$this->salt = ($salt === null) ? mt_rand() : $salt;
 			$this->data .= $this->salt;
 		}
 		else
@@ -195,13 +226,39 @@ class Hash
 
 	/**
 	 * Utilizada no processo de criação da hash
-	 * Gera o valor de iteração
+	 * Se $iterations for nulo: gera e concatena as Interations
+	 * Não sendo, concatena ass Interations enviado pelo usuário.
 	 *
 	 * @internal
+	 * @param string $iterations
 	 */
-	private function set_iterations()
+	private function set_iterations($iterations)
 	{
-		$this->iterations = ($this->has_iteration) ? mt_rand(1, $this->MAX_ITERATIONS) : 1;
+		if ($this->has_iteration)
+		{
+			$this->iterations = ($iterations === null) ? mt_rand(1, $this->MAX_ITERATIONS) : $iterations;
+		}
+		else
+		{
+			$this->iterations = 1;
+		}
+	}
+
+	/**
+	 * Compara uma hash com outra gerada a partir de valores inseridos pelo usuário
+	 *
+	 * @param string $hash original
+	 * @param string $secret segredo que será encriptado
+	 * @param int $salt salt concatenado
+	 * @param int $iterations numero de iterações SHA256
+	 * @param int $timestamp momento concatenada
+	 * @return boolean resposta
+	 */
+	public static function compare($hash, $secret, $salt = null, $iterations = null, $timestamp= null)
+	{
+		$new = new Hash();
+		$new->generate_with($secret, $salt, $iterations, $timestamp);
+		return ($hash === $new->get_hash());
 	}
 
 }

@@ -122,7 +122,6 @@ class Database
 	 * Executa inserção, alteração ou atualização de valor no banco de dados
 	 *
 	 * @param SQLBuilder $query de inserção de dados
-	 * @param boolean $transaction executar transação
 	 * @throws DatabaseException caso não seja uma inserção válida
 	 * @return boolean resultado da inserção
 	 */
@@ -130,8 +129,8 @@ class Database
 	{
 		try {
 			$this->begin();
+			echo $query->generate();
 			$statement = $this->connection->prepare($query->generate());
-			$this->connection->beginTransaction();
 			$result = $statement->execute();
 			$this->commit();
 			return $result;

@@ -22,7 +22,9 @@ class Security
 	 * @access privado para proibir novas instances.
 	 * @internal função de uso interno
 	 */
-	private function __construct() {}
+	private function __construct()
+	{
+	}
 
 	private function __clone(){}
 	private function __wakeup(){}
@@ -48,7 +50,7 @@ class Security
 	 * Camada de segurança necessária para evitar roubos de session
 	 * relacionados ao nome de padrão do cookie.
 	 *
-	 * @see PHPSESSID 
+	 * @see PHPSESSID
 	 * @return string
 	 */
 	public function session_name()
@@ -58,9 +60,9 @@ class Security
 			$name = new Hash();
 			$this->session_name = $name->generate(
 				'CustomSession' .
-				$_SERVER['REMODE_ADDR'] .
+				$_SERVER['REMOTE_ADDR'] .
 				$_SERVER['HTTP_USER_AGENT']
-			);
+			)->get_hash();
 		}
 		return $this->session_name;
 	}

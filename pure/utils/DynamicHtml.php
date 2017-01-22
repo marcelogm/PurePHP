@@ -53,6 +53,38 @@ class DynamicHtml
 			'app/assets/images/' . $name . '">';
 	}
 
+	/**
+	 * Gera um link reativo para a URL digitada pelo usuário
+	 * Exemplo:
+	 * String: 'site/index'
+	 * Resultado: 'http://sitename/site/index'
+	 *
+	 * @param string $path caminho relativo
+	 * @return string url final
+	 */
+	public static function link_to($path)
+	{
+		return UrlManager::get_instance()->get_base_url() . $path;
+	}
+
+	/**
+	 * Gera uma tag HTML que faz o link entre a página e um arquivo JS
+	 *
+	 * @param string $path nome do arquivo em app\assets\scripts
+	 * @return string código HTML
+	 */
+	public static function link_script($path)
+	{
+		return '<script src="' . UrlManager::get_instance()->get_base_url() .
+			'app/assets/scripts/' . $path .
+			'"></script>';
+	}
+
+	/**
+	 * Clase de uso interno para geração de HTML
+	 * @param array $classes ['key' => 'value']
+	 * @return string conteúdo HTML
+	 */
 	private static function generate_classes($classes)
 	{
 		$string = '';

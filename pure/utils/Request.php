@@ -5,16 +5,25 @@ use Pure\Routes\UrlManager;
 use Pure\Routes\Route;
 
 /**
- * Request short summary.
+ * Gerenciador de requisições
  *
- * Request description.
+ * Trata redirecionamentos, envio de requisições e recarregamentos
  *
  * @version 1.0
- * @author 00271922
+ * @author Marcelo Gomes Martins
  */
 class Request
 {
 
+	/**
+	 * Verifica se a rota atual (@see $manager->get_route())
+	 * está presente no array de rotas enviadas por parametro
+	 *
+	 * Em outras palavras, verifica se a rota atual pertence a lista enviada.
+	 *
+	 * @param Route[] $routes array de rotas
+	 * @return boolean resposta
+	 */
 	public static function is_to($routes = [])
 	{
 		$manager = UrlManager::get_instance();
@@ -29,20 +38,35 @@ class Request
 		return false;
 	}
 
+	/**
+	 * Redireciona o usuário para uma página dentro da própria aplicação
+	 *
+	 * Exemplo:
+	 * - String: 'controller/action'
+	 *
+	 * @param Route|string $destination
+	 * @return boolean resposta
+	 */
 	public static function redirect($destination)
 	{
-		if (is_a($destination, Route::class))
-		{
-			$engine = Engine::get_instance();
-			$engine->load_route($destination);
-		} else if (is_string($destination))
+		if (is_string($destination))
 		{
 			$manager = UrlManager::get_instance();
 			header('location: ' . $manager->get_base_url() . $destination);
+			exit();
 		}
 		return false;
 	}
 
+	/**
+	 * Redireciona o usuário para uma página externa à aplicação
+	 *
+	 * Exemplo:
+	 * - String: 'http://google.com'
+	 *
+	 * @param mixed $url
+	 * @return boolean resposta
+	 */
 	public static function redirect_to_url($url)
 	{
 		if (is_string($url))
@@ -53,9 +77,16 @@ class Request
 		return false;
 	}
 
+	public static function is_ajax()
+	{
+		return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+	}
+
+	/**
+	 * @todo
+	 */
 	public static function reload()
 	{
-
 	}
 
 	/**
@@ -66,7 +97,14 @@ class Request
 	 */
 	public static function send($content, $method, $header)
 	{
-
 	}
 
+	/**
+	 * Verifica se a requisição atual pelo usuário é POST
+	 * @return boolean resposta
+	 */
+	public static function is_POST()
+	{
+		return $_SERVER['REQUEST_METHOD'] === 'POST';
+	}
 }

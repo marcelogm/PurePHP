@@ -41,7 +41,7 @@ class Route
 	{
 		$this->controller = ucfirst($controller) . 'Controller';
 		$this->action = $action . '_action';
-		$this->param = (int)$param;
+		$this->param = $param;
 	}
 
 	/**

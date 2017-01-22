@@ -3,9 +3,9 @@ namespace Pure\Utils;
 
 /**
  * Classe gerenciadora de autenticação de usuários
- * 
+ *
  * Responsável pelo gerenciamento especifico de dados de session utilizados como autenticadores
- * Define o usuário como autenticado, verifica autenticidade de session e outras funcionalidades 
+ * Define o usuário como autenticado, verifica autenticidade de session e outras funcionalidades
  * relacionadas a autenticação.
  *
  * @version 1.0
@@ -42,6 +42,18 @@ class Auth
 		$session->set('uid', $user_id);
 		$session->set('uinfo', $user_info);
 		$session->set('session_owner', $security->session_name());
+	}
+
+	/**
+	 * Finaliza a sessao e faz logout do usuário na session.
+	 */
+	public static function revoke()
+	{
+		$session = Session::get_instance();
+		$session->wipe('uid');
+		$session->wipe('uinfo');
+		$session->wipe('session_owner');
+		$session->destroy();
 	}
 
 }
