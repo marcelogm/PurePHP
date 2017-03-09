@@ -186,7 +186,7 @@ class SQLBuilder
 	{
 		if(is_string($table_name))
 		{
-			$this->string .= $type . ' JOIN ' . $table_name;
+			$this->string .= ' ' . $type . ' JOIN ' . $table_name;
 		}
 		return $this;
 	}
@@ -361,7 +361,7 @@ class SQLBuilder
 			implode(' ' . $logical_operator . ' ',
 				array_map(
 					function ($key, $value) use ($relational_operator) {
-						return $key . ' ' . $relational_operator . ' \'' . $value . '\'';
+						return $key . ' ' . $relational_operator . ' ' . var_export($value, true);
 					},
 					array_keys($array),
 					$array

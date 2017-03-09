@@ -1,7 +1,8 @@
 <?php
 namespace Pure\Bases;
 use Pure\Exceptions\ViewException;
-use Pure\Routes\UrlManager;
+use Pure\Utils\Session;
+use Pure\Utils\Params;
 
 /**
  * Classe básica para Controllers
@@ -19,8 +20,14 @@ abstract class Controller
 	protected $data = [];
 	protected $page;
 	protected $layout;
-	private $session;
-	private $params;
+	protected $session;
+	protected $params;
+
+	public function __construct()
+	{
+		$this->session = Session::get_instance();
+		$this->params = Params::get_instance();
+	}
 
 	/**
 	 * Método que será executado antes do método action
@@ -65,6 +72,24 @@ abstract class Controller
 		if((@include($this->layout)) === false)
 		{
 			throw new ViewException($this->layout . ' não foi encontrado.');
+		}
+	}
+
+	/**
+	 * Renderiza conteúdo AJAX, sem cabeçalho HTTP
+	 * @param string $page valor padrão 'index', referencia script em /app/views/pages/ajax/index.php
+	 * @throws ViewException caso não seja possivel carregar o layout
+	 */
+	public function render_ajax($page = 'index')
+	{
+		$this->page = BASE_PATH . 'app/views/pages/ajax/' . $page . '.php';
+		foreach($this->data as $name => $item)
+		{
+			$$name = $item;
+		}
+		if((@include($this->page)) === false)
+		{
+			throw new ViewException($this->page . ' não foi encontrado.');
 		}
 	}
 

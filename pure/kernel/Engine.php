@@ -92,7 +92,7 @@ class Engine
 		$class = 'app\\controllers\\' . $route->get_controller();
 		if (!class_exists($class))
 		{
-			throw new ClassException('O controller ' . $class . ' não existe.');
+			throw new ClassException('O controller ' . $class . ' não existe');
 		}
 		return new $class();
 	}
@@ -111,7 +111,7 @@ class Engine
 
 		if (!method_exists($controller, $action))
 		{
-			throw new ClassException('O método ' . $action . ' não está presente no controller. ');
+			throw new ClassException('O método ' . $action . ' não está presente no controller ');
 		}
 		$controller->before();
 		$controller->$action($param);

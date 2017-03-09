@@ -1,5 +1,6 @@
 <?php
 namespace Pure\Db;
+use Pure\Bases\Model;
 use App\Configs\Config;
 use Pure\Exceptions\DatabaseException;
 use PDO;
@@ -90,7 +91,6 @@ class Database
 	 * Executa query no banco de dados
 	 *
 	 * @param SQLBuilder $query a ser executada
-	 * @param boolean $transaction executar transação
 	 * @throws DatabaseException caso não seja uma query valida
 	 * @return array array de objetos do banco de dados
 	 */
@@ -98,18 +98,15 @@ class Database
 	{
 		$list = [];
 		try {
-			$this->begin();
 			$statement = $this->connection->prepare($query->generate());
 			$statement->execute();
 			while($object = $statement->fetchObject())
 			{
 				array_push($list, $object);
 			}
-			$this->commit();
 			return $list;
 		} catch(\Exception $e)
 		{
-			$this->rollback();
 			throw new DatabaseException('Falha ao executar query: ' .
 				$query->generate() .
 				' Mais informações: ' .
@@ -122,23 +119,19 @@ class Database
 	 * Executa inserção, alteração ou atualização de valor no banco de dados
 	 *
 	 * @param SQLBuilder $query de inserção de dados
-	 * @param boolean $transaction executar transação
 	 * @throws DatabaseException caso não seja uma inserção válida
-	 * @return boolean resultado da inserção
+	 * @return integer último id modificado
 	 */
 	public function execute_update($query)
 	{
 		try {
-			$this->begin();
 			$statement = $this->connection->prepare($query->generate());
-			$this->connection->beginTransaction();
 			$result = $statement->execute();
-			$this->commit();
-			return $result;
+			$id = $this->connection->lastInsertId('id');
+			return (!$result) ? false : $id;
 		}
 		catch(\Exception $e)
 		{
-			$this->rollback();
 			throw new DatabaseException('Falha ao executar inserção: ' .
 				$query->generate() .
 				' Mais informações: ' .

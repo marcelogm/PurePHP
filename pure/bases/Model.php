@@ -90,7 +90,7 @@ abstract class Model
 	 * retorna o objeto sem o encapsulamento do array
 	 *
 	 * @param integer or array $filters filtros para a WHERE
-	 * @return array or object resposta da consulta
+	 * @return array|object|null resposta da consulta
 	 */
 	public static function find($filters = null)
 	{
@@ -100,16 +100,12 @@ abstract class Model
 		{
 			$sql->builder(self::get_table_name());
 		}
-		else if (is_int($filters))
-		{
-			$sql->builder(self::get_table_name() . ' WHERE id = ' . $filters);
-		}
 		else if (is_array($filters))
 		{
 			$sql->builder(self::get_table_name() . ' WHERE ' .
 				implode(' && ', array_map(
 						function ($key, $value) {
-							return $key . ' LIKE \'' . $value . '\'';
+							return $key . ' LIKE ' . var_export($value, true);
 						},
 						array_keys($filters),
 						$filters
@@ -117,8 +113,21 @@ abstract class Model
 				)
 			);
 		}
+		else if (is_int(intval($filters)))
+		{
+			$sql->builder(self::get_table_name() . ' WHERE id = ' . $filters);
+		}
 		$response = $sql->execute();
-		return (sizeof($response) === 1) ? $response[0] : $response;
+		if (sizeof($response) === 1)
+		{
+			return $response[0];
+		} else if (sizeof($response === 0))
+		{
+			return null;
+		} else
+		{
+			return $response;
+		}
 	}
 
 	/**
@@ -128,22 +137,18 @@ abstract class Model
 	 * Caso não exista id no objeto, será realizada uma nova entrada por meio do INSERT
 	 *
 	 * @param Model $entity
-	 * @return boolean resposta do banco de dados
+	 * @return false or integer resposta do banco de dados
 	 */
-	public static function save(self $entity)
+	public static function save($entity)
 	{
-		if($entity::get_table_name() === self::get_table_name())
+		if (isset($entity->id) && intval($entity->id))
 		{
-			if (isset($entity->id) && is_int($entity->id))
-			{
-				return self::quick_update($entity);
-			}
-			else
-			{
-				return self::quick_insert($entity);
-			}
+			return self::quick_update($entity);
 		}
-		return false;
+		else
+		{
+			return self::quick_insert($entity);
+		}
 	}
 
 	/**
@@ -152,15 +157,15 @@ abstract class Model
 	 *
 	 * @internal
 	 * @param Model $entity objeto a ser atualizado
-	 * @return boolean resposta do banco de dados
+	 * @return false or integer resposta do banco de dados
 	 */
-	private static function quick_update(self $entity)
+	private static function quick_update($entity)
 	{
 		$map = self::get_table_map();
 		$sql = new SQLBuilder(SQLType::DML);
 		foreach($map as $column => &$value)
 		{
-			if(property_exists($entity, $column))
+			if(property_exists($entity, $column) && $entity->$column !== null)
 			{
 				$value = $entity->$column;
 			}
@@ -181,17 +186,17 @@ abstract class Model
 	 * contidas no objeto relacional
 	 *
 	 * @param Model $entity objeto a ser inserido
-	 * @return boolean resposta do banco de dados
+	 * @return false or integer resposta do banco de dados
 	 */
-	private static function quick_insert(self $entity)
+	private static function quick_insert($entity)
 	{
 		$map = self::get_table_map();
 		$sql = new SQLBuilder(SQLType::DML);
 		foreach($map as $column => &$value)
 		{
-			if (property_exists($entity, $column))
+			if (property_exists($entity, $column) && $entity->$column !== null)
 			{
-				$value = '\'' . $entity->$column . '\'';
+				$value = var_export($entity->$column, true);
 			}
 			else
 			{
@@ -356,7 +361,7 @@ abstract class Model
 		return implode(', ',
 			array_map(
 				function ($key, $value) {
-					return $key . ' = ' . '\'' . $value . '\'';
+					return $key . ' = ' . var_export($value, true);
 				},
 				array_keys($array),
 				$array

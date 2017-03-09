@@ -14,7 +14,7 @@ class SiteController extends Controller
 
 	public function index_action()
 	{	
-		$this->data['teste'] = Image::find();
+		$this->data['teste'] = 'Eu sou uma string';
 		$this->render();
 	}
 

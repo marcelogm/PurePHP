@@ -55,16 +55,34 @@ class UrlManager
 	 */
 	public function get_route()
 	{
-		if (isset($_GET['PurePage']))
+		if (PURE_DEBUG)
 		{
-			$requested = trim($_GET['PurePage']);
+			if (isset($_GET['PurePage']))
+			{
+				$requested = trim($_GET['PurePage']);
+				$exploded_url = explode('/', $requested);
+				$route = new Route(
+					(isset($exploded_url[0])) ? $exploded_url[0] : '',
+					(isset($exploded_url[1])) ? $exploded_url[1] : '',
+					(isset($exploded_url[2])) ? $exploded_url[2] : ''
+				);
+				return $route;
+			}
+		}
+		else
+		{
+			// Definido para http://domain.com/path
+			$requested = trim($_SERVER['REQUEST_URI']);
 			$exploded_url = explode('/', $requested);
-			$route = new Route(
-				(isset($exploded_url[0])) ? $exploded_url[0] : '',
-				(isset($exploded_url[1])) ? $exploded_url[1] : '',
-				(isset($exploded_url[2])) ? $exploded_url[2] : ''
-			);
-			return $route;
+			if(!empty($exploded_url[2]))
+			{
+				$route = new Route(
+					(isset($exploded_url[2])) ? $exploded_url[2] : '',
+					(isset($exploded_url[3])) ? $exploded_url[3] : '',
+					(isset($exploded_url[4])) ? $exploded_url[4] : ''
+				);
+				return $route;
+			}
 		}
 		return $this->get_default_route();
 	}
@@ -103,7 +121,7 @@ class UrlManager
 	}
 
 	/**
-	 * Gera a URL base do serviço acessado pelo usuário 
+	 * Gera a URL base do serviço acessado pelo usuário
 	 * @return string url base da aplicação
 	 */
 	private static function set_base_url()
@@ -112,7 +130,15 @@ class UrlManager
 		$info = pathinfo($path);
 		$hostname = $_SERVER['HTTP_HOST'];
 		$protocol = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, 5));
-		$protocol = strpos($protocol, 'https') ? 'https://' : 'http://';
+		if (PURE_DEBUG)
+		{
+			$protocol = strpos($protocol, 'https') ? 'https://' : 'http://';
+		}
+		else
+		{
+			// Definido para http://ufrgs.br/cacln
+			$protocol = 'https://';
+		}
 		return $protocol . $hostname . $info['dirname'] . '/';
 	}
 
