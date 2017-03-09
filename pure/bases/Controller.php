@@ -75,19 +75,6 @@ abstract class Controller
 		}
 	}
 
-	public function render_ajax($page = 'index')
-	{
-		$this->page = BASE_PATH . 'app/views/pages/' . $page . '.php';
-		foreach($this->data as $name => $item)
-		{
-			$$name = $item;
-		}
-		if((@include($this->page)) === false)
-		{
-			throw new ViewException($this->page . ' não foi encontrado.');
-		}
-	}
-
 	/**
 	 * Renderiza conteúdo AJAX, sem cabeçalho HTTP
 	 * @param string $page valor padrão 'index', referencia script em /app/views/pages/ajax/index.php
