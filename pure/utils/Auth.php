@@ -13,8 +13,6 @@ namespace Pure\Utils;
  */
 class Auth
 {
-	private $session;
-
 	/**
 	 * Verifica se usuário está autenticado e é dono de uma session válida
 	 * A verificação de session é feita através da comparação entrei os dados da session do usuário

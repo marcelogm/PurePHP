@@ -3,12 +3,16 @@ namespace Pure\Bases;
 use Pure\Exceptions\ClassException;
 
 /**
- * Plugin short summary.
+ * Classe básica para Plugins
  *
- * Plugin description.
+ * Deve servir como base para outros plugins, é
+ * uma base para a importação de plugins para dentro do framework
+ * Possibilita utilizar classes que possuem autoloaders próprios ou
+ * que executam em um namespace diferente
  *
+ * @abstract
  * @version 1.0
- * @author 00271922
+ * @author Marcelo Gomes Martins
  */
 abstract class Plugin
 {
@@ -17,6 +21,9 @@ abstract class Plugin
 	private $class_reference;
 	private static $instance = null;
 
+	/**
+	 * Método construtor, garantindo a inclusão do namespace da base PATH do plugin
+	 */
 	private function __construct()
 	{
 		$this->self_autoloader_registration();
@@ -29,6 +36,10 @@ abstract class Plugin
 		$this->class_reference = '\\' . $source['namespace'] . '\\' . $source['class'];
 	}
 
+	/**
+	 * Cria uma instance do objeto relacionado ao plugin
+	 * @return object
+	 */
 	public static function create()
 	{
 		$class = get_called_class();
@@ -37,6 +48,9 @@ abstract class Plugin
 		return $newest;
 	}
 
+	/**
+	 * Registra o autoloader do plugin
+	 */
 	private function self_autoloader_registration()
 	{
 		spl_autoload_register(
@@ -64,6 +78,13 @@ abstract class Plugin
 		);
 	}
 
+	/**
+	 * Chama os métodos presentes no objeto do plugin
+	 * @param mixed $method nome do método
+	 * @param mixed $arguments argumentos
+	 * @throws \BadMethodCallException caso o método não exista
+	 * @return mixed retorno do método
+	 */
 	public function __call($method, $arguments)
 	{
 		if(method_exists($this->plugin, $method))
@@ -76,6 +97,9 @@ abstract class Plugin
 		}
 	}
 
+	/**
+	 * Local do plugin
+	 */
 	public abstract function source();
 
 }

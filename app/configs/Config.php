@@ -49,11 +49,11 @@ class Config
 	public static function database()
 	{
 		return [
-			'address' => 'localhost',
-			'port' => '3306',
-			'dbname' => 'prntsc',
-			'username' => 'root',
-			'password' => ''
+			'address' => ENV_DATABASE_ADDRESS,
+			'port' => ENV_DATABASE_PORT,
+			'dbname' => ENV_DATABASE_NAME,
+			'username' => ENV_DATABASE_USER,
+			'password' => ENV_DATABASE_PASSWORD
 		];
 	}
 

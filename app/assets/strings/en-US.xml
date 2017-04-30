@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xml>
+  <items>
+    <!-- Sample string -->
+    <string name="hello" value="Hello world!"/>
+    <!-- Sample array -->
+    <array name="panel">
+      <string name="title" value="It's a title.'"/>
+      <string name="body" value="And a body."/>
+    </array>
+  </items>
+</xml>
