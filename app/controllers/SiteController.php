@@ -1,7 +1,7 @@
 <?php
 namespace App\Controllers;
 use Pure\Bases\Controller;
-use App\Models\Image;
+use Pure\Utils\Res;
 
 /**
  * Controller principal
@@ -13,8 +13,8 @@ class SiteController extends Controller
 {
 
 	public function index_action()
-	{	
-		$this->data['teste'] = 'Eu sou uma string';
+	{
+		$this->data['teste'] = 'Hello from teste.';
 		$this->render();
 	}
 

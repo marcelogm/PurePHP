@@ -57,6 +57,7 @@
     <Compile Include="pure\utils\Hash.php" />
     <Compile Include="pure\utils\Params.php" />
     <Compile Include="pure\utils\Request.php" />
+    <Compile Include="pure\utils\Res.php" />
     <Compile Include="pure\utils\Security.php" />
     <Compile Include="pure\utils\Session.php" />
     <Compile Include="README.md" />

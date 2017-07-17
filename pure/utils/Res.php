@@ -10,10 +10,9 @@ namespace Pure\Utils;
  */
 class Res
 {
-	// raw do xml
 	private static $xml;
-	// dados em cache
 	private static $data = [];
+	private static $locale;
 
     private function __construct() {}
     private function __clone() {}
@@ -71,7 +70,7 @@ class Res
 	 */
 	private static function prepare($name, $from) {
 		//@TODO: multilang
-		$str = file_get_contents(BASE_PATH . 'app/assets/strings/pt-BR.xml');
+		$str = file_get_contents(BASE_PATH . 'app/assets/strings/en-US.xml');
 		self::$xml = new \SimpleXMLElement($str);
 		if(!isset(self::$data[$from])) {
 			self::$data[$from] = self::$xml->xpath($from);
