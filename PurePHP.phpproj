@@ -22,6 +22,11 @@
   <ItemGroup>
     <Compile Include=".htaccess" />
     <Compile Include="app\configs\Config.php" />
+    <Compile Include="app\configs\env\development\database.php" />
+    <Compile Include="app\configs\env\development\variables.php" />
+    <Compile Include="app\configs\env\environment.php" />
+    <Compile Include="app\configs\env\production\database.php" />
+    <Compile Include="app\configs\env\production\variables.php" />
     <Compile Include="app\controllers\ErrorController.php" />
     <Compile Include="app\controllers\SiteController.php" />
     <Compile Include="app\models\Image.php" />
@@ -62,9 +67,14 @@
     <Folder Include="app\assets\favicon\" />
     <Folder Include="app\assets\fonts\" />
     <Folder Include="app\assets\images\" />
+    <Folder Include="app\assets\files\" />
+    <Folder Include="app\assets\strings\" />
     <Folder Include="app\assets\scripts\" />
     <Folder Include="app\assets\stylesheets\" />
     <Folder Include="app\configs\" />
+    <Folder Include="app\configs\env\" />
+    <Folder Include="app\configs\env\development\" />
+    <Folder Include="app\configs\env\production\" />
     <Folder Include="app\controllers\" />
     <Folder Include="app\models\" />
     <Folder Include="app\utils\" />
@@ -83,6 +93,7 @@
   <ItemGroup>
     <Content Include="app\assets\favicon\.htaccess" />
     <Content Include="app\assets\favicon\favicon.ico" />
+    <Content Include="app\assets\files\sample.txt" />
     <Content Include="app\assets\fonts\.htaccess" />
     <Content Include="app\assets\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="app\assets\fonts\glyphicons-halflings-regular.svg" />
@@ -94,6 +105,7 @@
     <Content Include="app\assets\scripts\bootstrap.js" />
     <Content Include="app\assets\scripts\bootstrap.min.js" />
     <Content Include="app\assets\scripts\npm.js" />
+    <Content Include="app\assets\strings\en-US.xml" />
     <Content Include="app\assets\stylesheets\.htaccess" />
     <Content Include="app\assets\stylesheets\bootstrap-theme.css" />
     <Content Include="app\assets\stylesheets\bootstrap-theme.css.map" />
