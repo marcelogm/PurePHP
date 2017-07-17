@@ -121,12 +121,12 @@ abstract class Model
 		if (sizeof($response) === 1)
 		{
 			return $response[0];
-		} else if (sizeof($response === 0))
-		{
-			return null;
-		} else
+		} else if (sizeof($response) > 0)
 		{
 			return $response;
+		} else
+		{
+			return null;
 		}
 	}
 

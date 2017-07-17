@@ -3,7 +3,7 @@ namespace Pure\Utils;
 
 /**
  * Arquivo de recursos
- * Respos�vel por recuperar strings e arrays de determinado arquivo XML
+ * Resposável por recuperar strings e arrays de determinado arquivo XML
  *
  * @version 1.0
  * @author Marcelo Gomes Martins
@@ -20,16 +20,17 @@ class Res
     private function __wakeup() {}
 
 	/**
-	 * Recuperar string do arquivo "app/assets/strings/en-US.xml"
+	 * Recuperar string do arquivo "app/assets/strings/pt-BR.xml"
 	 * @param mixed $name nome da variavel
 	 * @deprecated mixed $from grupo
 	 * @return string valor
 	 */
-	public static function get_string($name, $from = 'items') {
+	public static function str($name, $from = 'items') {
 		if(self::$xml === null)
 		{
 			self::prepare($name, $from);
 		}
+		//var_dump(self::$data[$from][0]);
 		foreach(self::$data[$from][0] as $item) {
 			if($item['name'] == $name) {
 				return $item['value']->__toString();
@@ -39,12 +40,12 @@ class Res
 	}
 
 	/**
-	 * Recuperar array do arquivo "app/assets/strings/en-US.xml"
+	 * Recuperar array do arquivo "app/assets/strings/pt-BR.xml"
 	 * @param mixed $name nome da variavel
 	 * @deprecated mixed $from grupo
 	 * @return array valor
 	 */
-	public static function get_array($name, $from = 'items') {
+	public static function arr($name, $from = 'items') {
 		if(self::$xml === null)
 		{
 			self::prepare($name, $from);
@@ -63,14 +64,14 @@ class Res
 	}
 
 	/**
-	 * M�todo interno de prepara��o
+	 * Método interno de preparação
 	 * @todo i18n
-	 * @param mixed $name 
-	 * @param mixed $from 
+	 * @param mixed $name
+	 * @param mixed $from
 	 */
 	private static function prepare($name, $from) {
 		//@TODO: multilang
-		$str = file_get_contents(BASE_PATH . 'app/assets/strings/en-US.xml');
+		$str = file_get_contents(BASE_PATH . 'app/assets/strings/pt-BR.xml');
 		self::$xml = new \SimpleXMLElement($str);
 		if(!isset(self::$data[$from])) {
 			self::$data[$from] = self::$xml->xpath($from);
